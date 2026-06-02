@@ -1,0 +1,799 @@
+:root {
+  --bg: #080b10;
+  --header-bg: #070a0f;
+  --panel-bg: #0d1118;
+  --panel-header-bg: #0a0d12;
+  --border: #273243;
+  --text: #e8eaf0;
+  --muted: #8a93a8;
+  --blue: #4a90d9;
+  --green: #4caf76;
+  --red: #d94f4f;
+  --terminal-bg: #000000;
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.42);
+}
+
+body.polylinux-light {
+  --bg: #f5f7fb;
+  --header-bg: #ffffff;
+  --panel-bg: #ffffff;
+  --panel-header-bg: #ffffff;
+  --border: #d7e0ec;
+  --text: #111827;
+  --muted: #4b5563;
+  --blue: #1d5fbf;
+  --green: #17834a;
+  --red: #b42318;
+  --shadow: 0 10px 26px rgba(15, 23, 42, 0.09);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#header {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 18px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 260px;
+}
+
+.threat-dot,
+.vm-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px rgba(76, 175, 118, 0.65);
+  flex: 0 0 auto;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Fira Code", monospace;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+#status {
+  flex: 1;
+  font-family: "Fira Code", monospace;
+  font-size: 11px;
+  color: var(--green);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hbtn {
+  border: 1px solid rgba(74, 144, 217, 0.28);
+  background: rgba(74, 144, 217, 0.08);
+  color: var(--blue);
+  border-radius: 5px;
+  padding: 7px 11px;
+  font-family: "Fira Code", monospace;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.hbtn:hover {
+  background: rgba(74, 144, 217, 0.14);
+  border-color: rgba(74, 144, 217, 0.48);
+}
+
+.hbtn-reset {
+  color: var(--red);
+  border-color: rgba(217, 79, 79, 0.28);
+  background: rgba(217, 79, 79, 0.07);
+}
+
+#main {
+  height: calc(100vh - 58px);
+  padding: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.vm-panel {
+  width: min(1180px, 100%);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.vm-header {
+  height: 36px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  background: var(--panel-header-bg);
+  border-bottom: 1px solid var(--border);
+  font-family: "Fira Code", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.vm-badge {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.vm-container {
+  flex: 1;
+  min-height: 0;
+  background: var(--terminal-bg);
+  padding: 8px;
+  overflow: hidden;
+}
+
+.term,
+.xterm,
+.xterm-viewport,
+.xterm-screen {
+  width: 100%;
+  height: 100%;
+  background: #000000 !important;
+  color: #d0d0d0 !important;
+}
+
+.xterm .xterm-cursor-block {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+@media (max-width: 720px) {
+  #header {
+    height: auto;
+    min-height: 58px;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+  }
+
+  .brand-group {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  #status {
+    flex: 1 1 auto;
+  }
+
+  #main {
+    height: calc(100vh - 94px);
+    padding: 10px;
+  }
+}
+
+/* ── Markdown instruction panel + VM split layout ───────────────────── */
+#main.with-guide {
+  display: grid;
+  grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+#main.guide-collapsed {
+  grid-template-columns: 0 minmax(0, 1fr);
+  gap: 0;
+}
+
+#main.guide-collapsed #guide-panel {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-16px);
+  overflow: hidden;
+}
+
+#guide-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.panel-header {
+  height: 36px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  background: var(--panel-header-bg);
+  border-bottom: 1px solid var(--border);
+  font-family: "Fira Code", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+#guide-scroll {
+  --timeline-col-width: 82px;
+  --timeline-center-x: 41px;
+  --timeline-marker-center-y: 38px;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  padding: 18px 18px 24px 0;
+}
+
+.timeline-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--timeline-col-width) minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: start;
+  margin: 0 0 14px 0;
+  z-index: 1;
+}
+
+.timeline-row::before {
+  content: "";
+  position: absolute;
+  left: var(--timeline-center-x);
+  top: 0;
+  bottom: -14px;
+  width: 3px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #2f7df0 0%, #2f75d6 100%);
+  box-shadow: 0 0 14px rgba(47, 125, 240, 0.22);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.timeline-intro-row::before {
+  top: var(--timeline-marker-center-y);
+}
+
+.quickref-row::before,
+.timeline-row:last-child::before {
+  bottom: calc(100% - var(--timeline-marker-center-y));
+}
+
+body.polylinux-light .timeline-row::before {
+  background: #2f75d6;
+  box-shadow: 0 0 0 1px rgba(47, 117, 214, 0.08);
+}
+
+.timeline-marker {
+  grid-column: 1;
+  justify-self: center;
+  align-self: start;
+  position: relative;
+  z-index: 4;
+  width: 46px;
+  height: 46px;
+  margin-top: 15px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1f66d1;
+  color: #ffffff;
+  border: 3px solid #17202d;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.44), 0 0 18px rgba(47, 125, 240, 0.30), 0 7px 18px rgba(0, 0, 0, 0.45);
+  font-family: "Fira Code", monospace;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.timeline-marker.start,
+.timeline-marker.ref {
+  width: 54px;
+  height: 54px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* Timeline marker label sizing.
+   Labels longer than five characters are truncated by instructions.js.
+   These five size levels keep 1-5 character labels centered inside the bubble. */
+.timeline-marker.marker-len-1 { font-size: 18px !important; letter-spacing: 0 !important; }
+.timeline-marker.marker-len-2 { font-size: 16px !important; letter-spacing: 0 !important; }
+.timeline-marker.marker-len-3 { font-size: 13px !important; letter-spacing: -0.04em !important; }
+.timeline-marker.marker-len-4 { font-size: 11px !important; letter-spacing: -0.08em !important; }
+.timeline-marker.marker-len-5 { font-size: 11px !important; letter-spacing: -0.08em !important; }
+
+.timeline-marker .marker-text {
+  display: block !important;
+  max-width: calc(100% - 6px) !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  line-height: 1 !important;
+  font-family: "Fira Code", monospace !important;
+  font-weight: 700 !important;
+}
+
+.timeline-marker .marker-text-len-1 { font-size: 18px !important; letter-spacing: 0 !important; }
+.timeline-marker .marker-text-len-2 { font-size: 16px !important; letter-spacing: 0 !important; }
+.timeline-marker .marker-text-len-3 { font-size: 13px !important; letter-spacing: -0.04em !important; }
+.timeline-marker .marker-text-len-4 { font-size: 12px !important; letter-spacing: -0.08em !important; }
+.timeline-marker .marker-text-len-5 { font-size: 12px !important; letter-spacing: -0.08em !important; }
+
+.timeline-marker.start .marker-text-len-5,
+.timeline-marker.ref .marker-text-len-3 {
+  letter-spacing: 0.02em !important;
+}
+
+body.polylinux-light .timeline-marker {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(31, 102, 209, 0.32), 0 6px 16px rgba(31, 102, 209, 0.24);
+}
+
+.lab-card {
+  grid-column: 2;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: start;
+  background: linear-gradient(180deg, #151b25 0%, #111722 100%);
+  border: 1.5px solid #344154;
+  border-radius: 10px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.035) inset;
+  color: #d9e2ee;
+  padding: 16px;
+}
+
+body.polylinux-light .lab-card {
+  background: #ffffff;
+  border-color: #cfd8e6;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.11), 0 1px 0 rgba(255, 255, 255, 0.95) inset;
+  color: #111827;
+}
+
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1f66d1;
+  color: #ffffff;
+  font-family: "Fira Code", monospace;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.card-content { min-width: 0; }
+
+.g-intro h2,
+.intro-card h2 {
+  margin: 0 0 10px 0;
+  color: #f3f7ff;
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+body.polylinux-light .g-intro h2,
+body.polylinux-light .intro-card h2 {
+  color: #111827;
+}
+
+.step-label {
+  display: inline-flex;
+  margin: 0 0 5px 0;
+  padding: 3px 8px;
+  border: 1px solid rgba(110, 178, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(74, 144, 217, 0.10);
+  color: #6eb2ff;
+  font-family: "Fira Code", monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.polylinux-light .step-label {
+  color: #1d5fbf;
+  background: #eef6ff;
+  border-color: #cfe3ff;
+}
+
+.step-heading {
+  margin: 0 0 10px 0;
+  color: #f3f7ff;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+body.polylinux-light .step-heading {
+  color: #111827;
+}
+
+.body-text,
+.lab-card li {
+  color: #b8c2d3;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.body-text {
+  margin: 0 0 10px 0;
+}
+
+body.polylinux-light .body-text,
+body.polylinux-light .lab-card li {
+  color: #374151;
+}
+
+.lab-card ul {
+  margin: 6px 0 10px 18px;
+  padding: 0;
+}
+
+.lab-card code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.92em;
+  color: #e8eef8;
+  background: #0b111a;
+  border: 1px solid #344154;
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+body.polylinux-light .lab-card code {
+  color: #111827;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.instructions-loading,
+.instructions-error {
+  margin: 16px 18px 0 82px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  background: rgba(74, 144, 217, 0.06);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.with-guide .vm-panel {
+  width: 100%;
+}
+
+@media (max-width: 980px) {
+  html, body { overflow: auto; }
+
+  #main.with-guide,
+  #main.guide-collapsed {
+    height: auto;
+    min-height: calc(100vh - 94px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #main.guide-collapsed #guide-panel {
+    display: none;
+  }
+
+  #guide-panel {
+    min-height: 360px;
+  }
+
+  .vm-panel {
+    min-height: 520px;
+  }
+
+  #guide-scroll {
+    --timeline-col-width: 70px;
+    --timeline-center-x: 35px;
+  }
+
+  .lab-card {
+    grid-template-columns: 1fr;
+  }
+
+  .card-icon {
+    display: none;
+  }
+}
+
+/* ── Side tabs and right-side Microsoft Forms panel ─────────────────── */
+.side-tab {
+  position: fixed;
+  z-index: 40;
+  top: 72px;
+  border: 1px solid rgba(74, 144, 217, 0.32);
+  background: var(--panel-header-bg);
+  color: var(--blue);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: "Fira Code", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.side-tab:hover {
+  background: rgba(74, 144, 217, 0.14);
+  border-color: rgba(74, 144, 217, 0.52);
+}
+
+.side-tab-left {
+  left: 18px;
+}
+
+.side-tab-right {
+  right: 18px;
+}
+
+#main.with-guide {
+  grid-template-columns: minmax(340px, 420px) minmax(0, 1fr) 0;
+}
+
+#main.with-guide.form-open {
+  grid-template-columns: minmax(320px, 400px) minmax(0, 1fr) minmax(360px, 440px);
+}
+
+#main.guide-collapsed.form-open {
+  grid-template-columns: 0 minmax(0, 1fr) minmax(360px, 440px);
+  gap: 18px;
+}
+
+#form-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(16px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+#main.form-open #form-panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.form-frame-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--panel-bg);
+}
+
+#ms-form-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #ffffff;
+}
+
+.form-placeholder {
+  position: absolute;
+  inset: 16px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  background: rgba(74, 144, 217, 0.06);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.form-placeholder.show {
+  display: flex;
+}
+
+@media (max-width: 1100px) {
+  #main.with-guide.form-open {
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) minmax(320px, 380px);
+  }
+}
+
+@media (max-width: 980px) {
+  .side-tab {
+    position: static;
+    box-shadow: none;
+  }
+
+  body::before {
+    content: "";
+    display: none;
+  }
+
+  #header {
+    gap: 8px;
+  }
+
+  #main.with-guide.form-open,
+  #main.guide-collapsed.form-open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #form-panel {
+    min-height: 480px;
+  }
+}
+
+/* ── Header layout patch: left Instructions, centered title, right controls ── */
+#header {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto minmax(280px, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.header-left {
+  justify-content: flex-start;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+.brand-group {
+  justify-content: center;
+  min-width: 0;
+  width: auto;
+}
+
+#lab-title {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* The VM boot/status label is intentionally removed from the header. */
+#status {
+  display: none !important;
+}
+
+/* The panel toggles now live in the header, not as floating tabs. */
+.side-tab {
+  position: static;
+  z-index: auto;
+  top: auto;
+  left: auto;
+  right: auto;
+  box-shadow: none;
+}
+
+#btn-form {
+  color: var(--green);
+  border-color: rgba(76, 175, 118, 0.30);
+  background: rgba(76, 175, 118, 0.07);
+}
+
+#btn-form:hover {
+  background: rgba(76, 175, 118, 0.13);
+  border-color: rgba(76, 175, 118, 0.50);
+}
+
+@media (max-width: 900px) {
+  #header {
+    height: auto;
+    min-height: 58px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "left"
+      "right";
+    padding: 10px 12px;
+  }
+
+  .brand-group { grid-area: title; }
+  .header-left { grid-area: left; justify-content: center; }
+  .header-right { grid-area: right; justify-content: center; flex-wrap: wrap; }
+
+  #main {
+    height: calc(100vh - 130px);
+  }
+}
+
+
+/* PATCH: MS Forms iframe interaction fix
+   The placeholder helper text must never sit above a real form. When it did,
+   it created the dashed rectangle and intercepted clicks, typing, and wheel
+   scrolling intended for the Microsoft Forms iframe. */
+.form-frame-wrap {
+  overflow: hidden;
+}
+
+#ms-form-frame {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+#ms-form-frame.has-form + #form-placeholder,
+.form-placeholder:not(.show) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border: 0 !important;
+}
+
+.form-placeholder.show {
+  z-index: 1;
+  pointer-events: none !important;
+}
