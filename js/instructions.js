@@ -278,7 +278,7 @@
         btn.addEventListener("click", () => {
             const collapsed = main.classList.toggle("guide-collapsed");
             btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
-            btn.textContent = collapsed ? "☰ Show Instructions" : "☰ Instructions";
+            btn.textContent = collapsed ? "Show Instructions" : "Hide Instructions";
 
             setTimeout(() => {
                 if (window.terminals && window.terminals.linux_serial && typeof window.terminals.linux_serial.fit === "function") {
@@ -306,7 +306,7 @@
         btn.addEventListener("click", () => {
             const open = main.classList.toggle("form-open");
             btn.setAttribute("aria-expanded", open ? "true" : "false");
-            btn.textContent = open ? "Codes Form ◂" : "Codes Form ▸";
+            btn.textContent = open ? "Open Codes Form" : "Close Codes Form";
             fitLinuxTerminalSoon();
         });
     }
