@@ -2,7 +2,7 @@
 title: PolyLinux File System Navigation
 short_title: FS-Navigation
 panel_title: Learning Path
-form_url: "https://forms.office.com/Pages/ResponsePage.aspx?id=?id=RY30fNs9iUOpwcEVUm61LpTnj6hRZqRDuq_1EWvYxyBURUk3UkU4UFNSQ1JBRk1SM0lJTjlORVpKQy4u"
+form_url: "https://forms.office.com/Pages/ResponsePage.aspx?id=RY30fNs9iUOpwcEVUm61LpTnj6hRZqRDuq_1EWvYxyBURUk3UkU4UFNSQ1JBRk1SM0lJTjlORVpKQy4u"
 sections:
   - label: START
     title: Welcome to PolyLinux!
