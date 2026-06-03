@@ -1,4 +1,4 @@
-olyLinux VM with Markdown Instructions and MS Forms Panel
+PolyLinux VM with Markdown Instructions and MS Forms Panel
 ==========================================================
 
 Run this package from a local web server, not directly from file://.
@@ -25,25 +25,25 @@ Now, use your browser to navigate to http://localhost/Polylinux4
 Expected runtime files to add/copy into this folder (leave all of this alone):
 ==============================================================================
 
-  lib/libv86.js
-  lib/v86.wasm
-  lib/xterm.js
-  lib/xterm-addon-fit.js
-  css/xterm.css
-  bios/seabios.bin
-  bios/vgabios.bin
-  css/polylinux-vm.css
-  js/ui.js
-  js/terminal.js  
-  js/instructions.js
++ lib/libv86.js
++ lib/v86.wasm
++ lib/xterm.js
++ lib/xterm-addon-fit.js
++ css/xterm.css
++ bios/seabios.bin
++ bios/vgabios.bin
++ css/polylinux-vm.css
++ js/ui.js
++ js/terminal.js
++ js/instructions.js
 
 Content files to modify for your individual lab:
 ================================================
-  images/bzImage
-  images/rootfs.cpio.gz
-  js/vm-init.js
-  index.html
-  fs-navigation.md
++ images/bzImage
++ images/rootfs.cpio.gz
++ js/vm-init.js
++ index.html
++ fs-navigation.md
 
 Lab-specific content belongs in fs-navigation.md.
 
