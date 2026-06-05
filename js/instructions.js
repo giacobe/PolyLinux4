@@ -6,7 +6,7 @@
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
+            .replace(/\"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
 
@@ -37,20 +37,20 @@
 
             if (!inSections) {
                 const kv = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-                if (kv) meta[kv[1]] = kv[2].replace(/^['"]|['"]$/g, "");
+                if (kv) meta[kv[1]] = kv[2].replace(/^[ '\"]|[ '\"]$/g, "").trim();
                 continue;
             }
 
             const item = line.match(/^\s*-\s+label:\s*(.*)$/);
             if (item) {
-                current = { label: item[1].trim().replace(/^['"]|['"]$/g, "") };
+                current = { label: item[1].trim().replace(/^[ '\"]|[ '\"]$/g, "") };
                 sections.push(current);
                 continue;
             }
 
             const prop = line.match(/^\s+([A-Za-z0-9_-]+):\s*(.*)$/);
             if (prop && current) {
-                current[prop[1]] = prop[2].trim().replace(/^['"]|['"]$/g, "");
+                current[prop[1]] = prop[2].trim().replace(/^[ '\"]|[ '\"]$/g, "");
             }
         }
 
@@ -148,7 +148,6 @@
         return classes.join(" ");
     }
 
-
     function extractIframeSrc(value) {
         const text = String(value || "").trim();
         const match = text.match(/src=["']([^"']+)["']/i);
@@ -156,12 +155,9 @@
     }
 
     function normalizeMicrosoftFormUrl(value) {
-        let url = extractIframeSrc(value).trim().replace(/^['"]|['"]$/g, "");
+        let url = extractIframeSrc(value).trim().replace(/^[ '\"]|[ '\"]$/g, "");
         if (!url || url === "about:blank" || url === "#") return "";
 
-        // If the lab designer provides a normal Microsoft Forms response URL,
-        // convert it to the iframe-friendly embed form. This prevents the panel
-        // from showing a landing card that opens the form in a new page.
         if (/forms\.(office|cloud)\.com|forms\.cloud\.microsoft/i.test(url)) {
             if (!/[?&]embed=true/i.test(url)) {
                 url += (url.includes("?") ? "&" : "?") + "embed=true";
@@ -180,9 +176,6 @@
             frame.src = url;
             frame.classList.add("has-form");
 
-            // IMPORTANT: when a real form URL exists, the helper overlay must be
-            // fully removed/disabled. If it remains layered over the iframe, it
-            // blocks mouse-wheel scrolling and typing inside Microsoft Forms.
             if (placeholder) {
                 placeholder.classList.remove("show");
                 placeholder.setAttribute("aria-hidden", "true");
@@ -270,26 +263,6 @@
         }
     }
 
-    function setupInstructionToggle() {
-        const btn = document.getElementById("btn-instructions");
-        const main = document.getElementById("main");
-        if (!btn || !main) return;
-
-        btn.addEventListener("click", () => {
-            const collapsed = main.classList.toggle("guide-collapsed");
-            btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
-            btn.textContent = collapsed ? "Show Instructions" : "Hide Instructions";
-
-            setTimeout(() => {
-                if (window.terminals && window.terminals.linux_serial && typeof window.terminals.linux_serial.fit === "function") {
-                    window.terminals.linux_serial.fit();
-                }
-            }, 260);
-        });
-    }
-
-
-
     function fitLinuxTerminalSoon() {
         setTimeout(() => {
             if (window.terminals && window.terminals.linux_serial && typeof window.terminals.linux_serial.fit === "function") {
@@ -298,15 +271,36 @@
         }, 260);
     }
 
+    function setupInstructionToggle() {
+        const btn = document.getElementById("btn-instructions");
+        const main = document.getElementById("main");
+        if (!btn || !main) return;
+
+        main.classList.remove("guide-collapsed");
+        btn.setAttribute("aria-expanded", "true");
+        btn.textContent = "Hide Instructions";
+
+        btn.addEventListener("click", () => {
+            const collapsed = main.classList.toggle("guide-collapsed");
+            btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+            btn.textContent = collapsed ? "Show Instructions" : "Hide Instructions";
+            fitLinuxTerminalSoon();
+        });
+    }
+
     function setupFormToggle() {
         const btn = document.getElementById("btn-form");
         const main = document.getElementById("main");
         if (!btn || !main) return;
 
+        main.classList.add("form-open");
+        btn.setAttribute("aria-expanded", "true");
+        btn.textContent = "Close Codes Form";
+
         btn.addEventListener("click", () => {
             const open = main.classList.toggle("form-open");
             btn.setAttribute("aria-expanded", open ? "true" : "false");
-            btn.textContent = open ? "Open Codes Form" : "Close Codes Form";
+            btn.textContent = open ? "Close Codes Form" : "Open Codes Form";
             fitLinuxTerminalSoon();
         });
     }
@@ -316,8 +310,6 @@
         if (!guide) return;
 
         guide.addEventListener("wheel", (event) => {
-            // xterm/v86 can install wheel handlers that interfere with nearby panels.
-            // Handle wheel scrolling directly while the pointer is over the guide.
             event.preventDefault();
             event.stopPropagation();
             if (typeof event.stopImmediatePropagation === "function") {
