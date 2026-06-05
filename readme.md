@@ -70,7 +70,7 @@ Set form_url in fs-navigation.md to the normal Microsoft Forms URL or paste the 
 
 images directory
 ----------------
-host your bzImage and rootfs.cpio.gz files here
+host your bzImage and rootfs.cpio.gz files here.  This repo has a very simple "empty" buildroot OS in its bzImage and rootfs.cpio.gz.  Replace these two files with your own.
 
 js/vm-init.js
 -------------
