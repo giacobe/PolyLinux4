@@ -3,22 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PolyLinux VM</title>
+  <title>{{LAB_TITLE}}</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="./css/xterm.css" rel="stylesheet" />
-  <link href="./css/polylinux-vm.css" rel="stylesheet" />
+  <link href="{{ASSET_BASE}}css/xterm.css" rel="stylesheet" />
+  <link href="{{ASSET_BASE}}css/polylinux-vm.css" rel="stylesheet" />
+
+  <script>
+    window.POLYLINUX_LAB_CONFIG = {
+      md: "{{LAB_MD}}",
+      bzimage: "{{BZIMAGE}}",
+      initrd: "{{INITRD}}",
+      assetBase: "{{ASSET_BASE}}"
+    };
+  </script>
 </head>
-<body class="polylinux-dark">
+<body class="polylinux-dark" data-lab-md="{{LAB_MD}}">
   <header id="header">
     <div class="header-left">
-      <button class="hbtn" id="btn-instructions" type="button" aria-expanded="true" aria-controls="guide-panel">☰ Instructions</button>
+      <button class="hbtn" id="btn-instructions" type="button" aria-expanded="true" aria-controls="guide-panel">Hide Instructions</button>
     </div>
 
     <div class="brand-group">
       <div class="threat-dot"></div>
-      <h1 id="lab-title">PolyLinux VM</h1>
+      <h1 id="lab-title">{{LAB_TITLE}}</h1>
     </div>
 
     <div class="header-right">
@@ -28,7 +38,7 @@
     </div>
   </header>
 
-  <main id="main" class="with-guide form-open">
+  <main id="main" class="form-open">
     <aside id="guide-panel" aria-label="Lab instructions">
       <div class="panel-header">
         <div class="vm-dot"></div>
@@ -64,13 +74,16 @@
     </aside>
   </main>
 
-  <script src="./lib/libv86.js"></script>
-  <script src="./lib/xterm.js"></script>
-  <script src="./lib/xterm-addon-fit.js"></script>
-  <script src="./js/lab-config.js"></script>
-  <script src="./js/ui.js"></script>
-  <script src="./js/terminal.js"></script>
-  <script src="./js/instructions.js"></script>
-  <script src="./js/vm-init.js"></script>
+  <script src="{{ASSET_BASE}}lib/libv86.js"></script>
+  <script src="{{ASSET_BASE}}lib/xterm.js"></script>
+  <script src="{{ASSET_BASE}}lib/xterm-addon-fit.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+
+  <script src="{{ASSET_BASE}}js/ui.js"></script>
+  <script src="{{ASSET_BASE}}js/terminal.js"></script>
+  <script src="{{ASSET_BASE}}js/instructions.js"></script>
+  <script src="{{ASSET_BASE}}js/vm-init.js"></script>
 </body>
 </html>

@@ -20,14 +20,14 @@
 
 * { box-sizing: border-box; }
 
-html, body {
+html,
+body {
   width: 100%;
   min-height: 100%;
   margin: 0;
-  background:
-    radial-gradient(circle at 18% 14%, rgba(47, 140, 255, 0.16), transparent 28rem),
-    radial-gradient(circle at 86% 78%, rgba(66, 216, 134, 0.08), transparent 25rem),
-    var(--bg);
+  background: radial-gradient(circle at 18% 14%, rgba(47, 140, 255, 0.16), transparent 28rem),
+              radial-gradient(circle at 86% 78%, rgba(66, 216, 134, 0.08), transparent 25rem),
+              var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -46,7 +46,9 @@ body.polylinux-light {
   --good: #138a55;
 }
 
-button, input, textarea { font: inherit; }
+button,
+input,
+textarea { font: inherit; }
 
 #header {
   height: 54px;
@@ -62,7 +64,9 @@ button, input, textarea { font: inherit; }
 
 .polylinux-light #header { background: rgba(244, 247, 251, 0.92); }
 
-.header-left, .header-right, .brand-group {
+.header-left,
+.header-right,
+.brand-group {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -78,7 +82,8 @@ button, input, textarea { font: inherit; }
   text-transform: uppercase;
 }
 
-.threat-dot, .vm-dot {
+.threat-dot,
+.vm-dot {
   width: 13px;
   height: 13px;
   border-radius: 999px;
@@ -107,20 +112,28 @@ button, input, textarea { font: inherit; }
   overflow: hidden;
 }
 
-#main.form-open { grid-template-columns: minmax(390px, 34vw) minmax(360px, 1fr) minmax(300px, 28vw); }
-#main.guide-collapsed { grid-template-columns: 0 minmax(360px, 1fr) 0; }
-#main.guide-collapsed.form-open { grid-template-columns: 0 minmax(360px, 1fr) minmax(300px, 28vw); }
+#main.form-open {
+  grid-template-columns: minmax(390px, 34vw) minmax(360px, 1fr) minmax(300px, 28vw);
+}
+
+#main.guide-collapsed {
+  grid-template-columns: 0 minmax(360px, 1fr) 0;
+}
+
+#main.guide-collapsed.form-open {
+  grid-template-columns: 0 minmax(360px, 1fr) minmax(300px, 28vw);
+}
+
 #main.guide-collapsed #guide-panel { display: none; }
 #main:not(.form-open) #form-panel { display: none; }
 
-/* Keep each major panel pinned to its intended grid column.
-   Without these assignments, display:none on #guide-panel causes the VM panel
-   to auto-place into column 1, which is 0px wide when instructions are hidden. */
 #guide-panel { grid-column: 1; }
 .vm-panel { grid-column: 2; }
 #form-panel { grid-column: 3; }
 
-#guide-panel, .vm-panel, #form-panel {
+#guide-panel,
+.vm-panel,
+#form-panel {
   min-width: 0;
   min-height: 0;
   display: flex;
@@ -132,7 +145,8 @@ button, input, textarea { font: inherit; }
   box-shadow: var(--shadow);
 }
 
-.panel-header, .vm-header {
+.panel-header,
+.vm-header {
   height: 38px;
   flex: 0 0 auto;
   display: flex;
@@ -163,14 +177,13 @@ button, input, textarea { font: inherit; }
   scrollbar-gutter: stable;
 }
 
-.instructions-loading {
+.instructions-loading,
+.instructions-error {
   color: var(--muted);
   padding: 24px;
 }
 
 .timeline-row {
-  --row-top-line: 0px;
-  --row-bottom-line: 0px;
   display: grid;
   grid-template-columns: var(--timeline-width) minmax(0, 1fr);
   gap: 18px;
@@ -179,14 +192,7 @@ button, input, textarea { font: inherit; }
   margin: 0 0 28px 0;
 }
 
-.timeline-intro-row {
-  --row-top-line: calc(var(--marker-size) + 5px);
-  min-height: max(430px, calc(100vh - 175px));
-}
-
-.quickref-row {
-  --row-bottom-line: calc(100% - var(--marker-size) / 2);
-}
+.timeline-first-row { min-height: max(360px, calc(100vh - 220px)); }
 
 .timeline-spine {
   position: relative;
@@ -200,8 +206,8 @@ button, input, textarea { font: inherit; }
 .timeline-spine::before {
   content: "";
   position: absolute;
-  top: var(--row-top-line);
-  bottom: var(--row-bottom-line);
+  top: 0;
+  bottom: -28px;
   left: 50%;
   width: var(--timeline-line-width);
   transform: translateX(-50%);
@@ -209,6 +215,15 @@ button, input, textarea { font: inherit; }
   background: linear-gradient(180deg, var(--accent-2), var(--accent));
   box-shadow: 0 0 16px rgba(47, 140, 255, 0.65);
   z-index: 0;
+}
+
+.timeline-first-row .timeline-spine::before {
+  top: calc(var(--marker-size) / 2);
+}
+
+.timeline-last-row .timeline-spine::before,
+.quickref-row .timeline-spine::before {
+  bottom: calc(100% - (var(--marker-size) / 2));
 }
 
 .timeline-marker {
@@ -232,16 +247,6 @@ button, input, textarea { font: inherit; }
   overflow: hidden;
 }
 
-.timeline-marker.ref {
-  margin-top: auto;
-  width: 26px;
-  height: 26px;
-  background: #eef6ff;
-  border-width: 5px;
-  outline: 0;
-  color: transparent;
-}
-
 .timeline-marker.marker-len-1 { font-size: 18px !important; letter-spacing: 0 !important; }
 .timeline-marker.marker-len-2 { font-size: 16px !important; letter-spacing: 0 !important; }
 .timeline-marker.marker-len-3 { font-size: 13px !important; letter-spacing: -0.04em !important; }
@@ -262,44 +267,7 @@ button, input, textarea { font: inherit; }
   overflow-wrap: anywhere;
 }
 
-.polylinux-light .lab-card {
-  background: linear-gradient(150deg, #ffffff, #eef4fb);
-}
-
-.intro-card {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
-  grid-auto-rows: min-content;
-  column-gap: 12px;
-  row-gap: 8px;
-  max-width: 560px;
-}
-
-.intro-card .lab-card-icon {
-  grid-column: 1;
-  grid-row: 1;
-  align-self: start;
-  font-size: 26px;
-  line-height: 1.1;
-  text-align: center;
-}
-
-.intro-card h2 {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: start;
-  margin: 0 0 22px 0;
-  font-size: clamp(26px, 2.2vw, 34px);
-  line-height: 1.22;
-}
-
-.intro-card p,
-.intro-card ul,
-.intro-card ol,
-.intro-card blockquote,
-.intro-card pre {
-  grid-column: 1 / -1;
-}
+.polylinux-light .lab-card { background: linear-gradient(150deg, #ffffff, #eef4fb); }
 
 .lab-card h3 {
   margin: 0 0 18px;
@@ -307,17 +275,25 @@ button, input, textarea { font: inherit; }
   line-height: 1.2;
 }
 
-.lab-card p {
-  margin: 0 0 1.15em 0;
-  max-width: 70ch;
+.lab-card h4 {
+  margin: 1.2em 0 0.5em;
+  font-size: 1.05em;
 }
 
-.lab-card ul, .lab-card ol {
-  margin: 0 0 1.1em 1.3em;
-  padding: 0;
-}
-
+.lab-card p { margin: 0 0 1.15em 0; max-width: 70ch; }
+.lab-card ul,
+.lab-card ol { margin: 0 0 1.1em 1.3em; padding: 0; }
 .lab-card li { margin: 0.35em 0; }
+.lab-card strong { font-weight: 700; }
+.lab-card em { font-style: italic; }
+
+.lab-card blockquote {
+  margin: 1em 0;
+  padding: 0.8em 1em;
+  border-left: 4px solid var(--accent);
+  background: rgba(47, 140, 255, 0.08);
+  color: var(--muted);
+}
 
 .lab-card code {
   padding: 0.1em 0.28em;
@@ -328,6 +304,34 @@ button, input, textarea { font: inherit; }
   font-size: 0.9em;
 }
 
+.lab-card pre {
+  overflow: auto;
+  padding: 1em;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.36);
+}
+
+.lab-card pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.lab-card table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.lab-card th,
+.lab-card td {
+  border: 1px solid var(--line);
+  padding: 0.5em 0.65em;
+  text-align: left;
+}
+
+.lab-card th { background: rgba(47, 140, 255, 0.12); }
 .lab-card a { color: var(--accent-2); }
 
 .eyebrow {
@@ -386,9 +390,22 @@ button, input, textarea { font: inherit; }
 .form-placeholder.show { display: flex; }
 
 @media (max-width: 1050px) {
-  #header { grid-template-columns: 1fr; height: auto; }
-  .brand-group { justify-content: center; order: -1; }
-  .header-left, .header-right { justify-content: center; flex-wrap: wrap; }
+  #header {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .brand-group {
+    justify-content: center;
+    order: -1;
+  }
+
+  .header-left,
+  .header-right {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
   #main,
   #main.form-open,
   #main.guide-collapsed,
@@ -398,7 +415,14 @@ button, input, textarea { font: inherit; }
     overflow: visible;
     grid-template-columns: 1fr;
   }
-  #guide-panel, .vm-panel, #form-panel { min-height: 520px; }
+
+  #guide-panel,
+  .vm-panel,
+  #form-panel {
+    grid-column: 1;
+    min-height: 520px;
+  }
+
   #main.guide-collapsed #guide-panel,
   #main:not(.form-open) #form-panel { display: none; }
 }
