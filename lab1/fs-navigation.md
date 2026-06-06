@@ -65,7 +65,7 @@ Throughout the lab:
 
 **Let's get started!**
 
-### Get On the Machine
+## Get On the Machine
 
 Wait for the VM on the right to finish booting. Once the login prompt appears, log in.
 
@@ -89,7 +89,7 @@ What do you notice about the directories and files?
 
 * Hint: Use `ls -la` to see hidden files and detailed information.*
 
-## Understand Directory Structure
+### Understand Directory Structure
 
 Linux organizes everything in a tree starting from the root directory `/`.
 
@@ -107,9 +107,9 @@ Notice how each directory can contain files and other directories.
 Many Linux tasks involve inspecting text files. Practice viewing file contents without changing them.
 
 Useful commands:
-`cat README.txt`
-`head README.txt`
-`tail README.txt`
+* `cat README.txt`
+* `head README.txt`
+* `tail README.txt`
 * Hint: If a file is long, try `less filename` so you can scroll through it. *
 
 ## PolyBandit3 Basic Levels 1–10 Instructions
