@@ -2,74 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PolyLinux VM</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="./css/xterm.css" rel="stylesheet" />
-  <link href="./css/polylinux-vm.css" rel="stylesheet" />
+  <title>PolyLinux</title>
+  <script>
+    window.location.replace("./lab1.html");
+  </script>
 </head>
-<body class="polylinux-dark" data-lab-md="./fs-navigation.md">
-  <header id="header">
-    <div class="header-left">
-      <button class="hbtn" id="btn-instructions" type="button" aria-expanded="true" aria-controls="guide-panel">☰ Instructions</button>
-    </div>
-
-    <div class="brand-group">
-      <div class="threat-dot"></div>
-      <h1 id="lab-title">PolyLinux VM</h1>
-    </div>
-
-    <div class="header-right">
-      <button class="hbtn" id="btn-theme" type="button">☀️ Theme</button>
-      <button class="hbtn hbtn-reset" id="btn-reset" type="button">⟳ Reset Lab</button>
-      <button class="hbtn" id="btn-form" type="button" aria-expanded="true" aria-controls="form-panel">Close Codes Form</button>
-    </div>
-  </header>
-
-  <main id="main" class="with-guide form-open">
-    <aside id="guide-panel" aria-label="Lab instructions">
-      <div class="panel-header">
-        <div class="vm-dot"></div>
-        <span id="guide-panel-title">Learning Path</span>
-      </div>
-      <div id="guide-scroll">
-        <div class="instructions-loading">Loading instructions...</div>
-      </div>
-    </aside>
-
-    <section class="vm-panel" id="panel_linux" aria-label="PolyLinux virtual machine">
-      <div class="vm-header linux">
-        <div class="vm-dot"></div>
-        <span>PolyLinux VM</span>
-        <span class="vm-badge">bzImage + rootfs.cpio.gz</span>
-      </div>
-      <div class="vm-container" id="linux_container">
-        <div class="term linux" id="linux_serial" tabindex="0"></div>
-      </div>
-    </section>
-
-    <aside id="form-panel" aria-label="Microsoft Forms code submission panel">
-      <div class="panel-header form-panel-header">
-        <div class="vm-dot"></div>
-        <span>Code Submission</span>
-      </div>
-      <div class="form-frame-wrap">
-        <iframe id="ms-form-frame" title="Microsoft Form" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-        <div id="form-placeholder" class="form-placeholder show">
-          Add a <code>form_url:</code> value in <code>fs-navigation.md</code> to load your Microsoft Form here.
-        </div>
-      </div>
-    </aside>
-  </main>
-
-  <script src="./lib/libv86.js"></script>
-  <script src="./lib/xterm.js"></script>
-  <script src="./lib/xterm-addon-fit.js"></script>
-  <script src="./js/ui.js"></script>
-  <script src="./js/terminal.js"></script>
-  <script src="./js/instructions.js"></script>
-  <script src="./js/vm-init.js"></script>
+<body>
+  <p>Loading PolyLinux...</p>
 </body>
 </html>
