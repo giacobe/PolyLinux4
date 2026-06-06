@@ -113,6 +113,13 @@ button, input, textarea { font: inherit; }
 #main.guide-collapsed #guide-panel { display: none; }
 #main:not(.form-open) #form-panel { display: none; }
 
+/* Keep each major panel pinned to its intended grid column.
+   Without these assignments, display:none on #guide-panel causes the VM panel
+   to auto-place into column 1, which is 0px wide when instructions are hidden. */
+#guide-panel { grid-column: 1; }
+.vm-panel { grid-column: 2; }
+#form-panel { grid-column: 3; }
+
 #guide-panel, .vm-panel, #form-panel {
   min-width: 0;
   min-height: 0;
