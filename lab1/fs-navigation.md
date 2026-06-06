@@ -82,7 +82,9 @@ Start by seeing where you are and what's around you.
 Run these commands:
 
 * `pwd`
+
 * `ls`
+
 * `ls -la`
 
 What do you notice about the directories and files?
@@ -96,8 +98,11 @@ Linux organizes everything in a tree starting from the root directory `/`.
 Try these commands:
 
 * `cd /`
+
 * `ls`
+
 * `cd /home`
+
 * `ls -la`
 
 Notice how each directory can contain files and other directories.
@@ -107,9 +112,13 @@ Notice how each directory can contain files and other directories.
 Many Linux tasks involve inspecting text files. Practice viewing file contents without changing them.
 
 Useful commands:
+
 * `cat README.txt`
+
 * `head README.txt`
+
 * `tail README.txt`
+
 * Hint: If a file is long, try `less filename` so you can scroll through it. *
 
 ## PolyBandit3 Basic Levels 1–10 Instructions
@@ -127,12 +136,19 @@ These instructions are based on the `basic1.sh` through `basic10.sh` setup scrip
 Useful commands:
 
 * `pwd`
+
 * `ls`
+
 * `ls -l`
+
 * `ls -la`
+
 * `cat README.txt`
+
 * `cat filename.txt`
+
 * `cd directoryname`
+
 * `find . -name 'inhere.txt' -type f`
 
 ---
@@ -145,6 +161,7 @@ Display the contents of `inhere.txt`. The contents of that file are the code for
 ### Steps
 
 * `ls`
+
 * `cat inhere.txt`
   
 ### What to submit
@@ -160,6 +177,7 @@ Display the contents of `.inhere.txt`. The leading dot means the file is hidden 
 ### Steps
 
 * `ls -la`
+
 * `cat .inhere.txt`
 
 ### What to submit
@@ -220,6 +238,7 @@ There are several directories. One directory has a name that is different from t
 Identify the directory whose name does not fit with the others, then inspect it:
 
 * `ls l`
+
 * `cat inhere.txt`
 
 ### What to submit
@@ -261,11 +280,13 @@ The code is part of a directory name. Look for the directory that contains a das
 Example pattern:
 
 * `text`
+
 * `someword-ABCDEFGH`
 
 In that example, the code would be:
 
 * `text`
+
 * `ABCDEFGH`
 
 ### What to submit
@@ -285,11 +306,13 @@ Each directory name contains a dash and a suffix. The code is the suffix after t
 Look for the directory that does not fit the naming pattern of the others. The code is after the dash:
 
 * `text`
+
 * `specialword-ABCDEFGH`
 
 In that example, the code would be:
 
 * `text`
+
 * `ABCDEFGH`
 
 A clue from the setup is that the correct directory contains `inhere.txt`, so this may help:
@@ -313,11 +336,13 @@ The code is part of a filename, not part of a directory name. Find the `.txt` fi
 Look for the `.txt` file whose name is different from the rest. The pattern is similar to:
 
 * `text`
+
 * `someword-ABCDEFGH.txt`
 
 In that example, the code would be:
 
 * `text`
+
 * `ABCDEFGH`
 
 Do not use the suffix from a directory name.
@@ -339,16 +364,19 @@ The code is the filename of the `.txt` file in the directory. Ignore `README.txt
 Find the `.txt` file that is not `README.txt`. For example, if the file is:
 
 * `text`
+
 * `ABCDEFGH.txt`
 
 Then the code is:
 
 * `text`
+
 * `ABCDEFGH`
 
 You may view the file to confirm:
 
 * `sh`
+
 * `cat ABCDEFGH.txt`
 
 ### What to submit
