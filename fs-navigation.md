@@ -57,165 +57,331 @@ sections:
     icon: ?
 ---
 
-## Welcome to PolyLinux!
+# PolyBandit3 Basic Levels 1–10 Instructions
 
-In this lab you will learn essential Linux command line skills. You will explore the file system, inspect files and directories, and practice using common Linux commands.
+These instructions are based on the `basic1.sh` through `basic10.sh` setup scripts in the `giacobe/polybandit3` repository. Each level places a code somewhere in that level's directory. Your job is to inspect the files and directories, locate the code, and record it for that level.
 
-Throughout the lab:
+> Assumption: each level is available under `/home/basicN`, where `N` is the level number. For example, Basic Level 1 is in `/home/basic1`.
 
-- Read each step carefully
-- Use the terminal on the right to complete tasks
-- Refer to the Quick Reference if you need help
+## General Rules
 
-**Let's get started!**
-
-## Get On the Machine
-
-Wait for the VM on the right to finish booting. Once the login prompt appears, log in.
-
-At the login prompt, type:
-
-`root`
-
-No password. Just hit **Enter**.
-
-## Explore the File System
-
-Start by seeing where you are and what's around you.
-
-Run these commands:
-
-`pwd`
-
-`ls`
-
-`ls -la`
-
-What do you notice about the directories and files?
-
-* Hint: Use `ls -la` to see hidden files and detailed information.*
-
-## Understand Directory Structure
-
-Linux organizes everything in a tree starting from the root directory `/`.
-
-Try these commands:
-
-`cd /`
-
-`ls`
-
-`cd /home`
-
-`ls -la`
-
-Notice how each directory can contain files and other directories.
-
-## Read File Contents
-
-Many Linux tasks involve inspecting text files. Practice viewing file contents without changing them.
+1. Start each level by changing into that level's directory.
+2. Read `README.txt` first.
+3. Use Linux command-line tools to locate the code.
+4. Do not include extra spaces, newlines, or file extensions unless the instructions say to.
+5. When a level says the code is in a filename, the code is the filename text only, not the file contents.
 
 Useful commands:
 
-`cat README.txt`
+```sh
+pwd
+ls
+ls -l
+ls -la
+cat README.txt
+cat filename.txt
+cd directoryname
+find . -name 'inhere.txt' -type f
+```
 
-`head README.txt`
+---
 
-`tail README.txt`
+## Basic Level 1 — Read a normal file
 
-* Hint: If a file is long, try `less filename` so you can scroll through it. *
+### Goal
+Display the contents of `inhere.txt`. The contents of that file are the code for this level.
 
-## Level 1
+### Steps
 
-Display the contents of the file called `inhere.txt` The contents of this file will be the answer code for this level.
+```sh
+cd /home/basic1
+cat README.txt
+ls
+cat inhere.txt
+```
 
-*hint: try using the `cat` command.*
+### What to submit
+Submit the text printed by `cat inhere.txt`.
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+---
 
-## Level 2
+## Basic Level 2 — Read a hidden file
 
-Display the contents of the file in the directory, but is hidden. The contents of this file will be the answer code for
-this level. Hidden files don't show up when you try to use the `ls` command. You will need some additional flags for this
-command to display the hidden files.
+### Goal
+Display the contents of `.inhere.txt`. The leading dot means the file is hidden from a normal `ls` listing.
 
-*hint: Try using the `ls -la` command with the -l and -a option flags. The order doesn't matter.*
-*Then, try using the cat command on the file. Don't forget the special character at the*
-*beginning of the file name.*
+### Steps
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+```sh
+cd /home/basic2
+cat README.txt
+ls -la
+cat .inhere.txt
+```
 
-## Level 3
+### What to submit
+Submit the text printed by `cat .inhere.txt`.
 
-Display the contents of the one file that is in this directory. You might see other files
-in addition to this one. You can display their contents, too, but they won't have the code you
-want. The contents of the one file you're looking for will be the answer code for this level.
+---
 
-*hint: try using the `cat` command.*
+## Basic Level 3 — Find the file that is not `README.txt`
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+### Goal
+One file in the directory contains the code. The hint says it is not `README.txt`.
 
-## Level 4
+### Steps
 
-There are a lot of files in this directory. All of them have a code inside. However, it's the one file
-that is named differently than the others that has the correct code. Figure out which one of the files
-has a different name. The contents of this file will be the answer code for this level.
+```sh
+cd /home/basic3
+cat README.txt
+ls -l
+```
 
-*hint: Look carefully at the file names. One doesn't match.*
+Identify the extra `.txt` file that is not `README.txt`, then display it:
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+```sh
+cat name-of-the-other-file.txt
+```
 
-## Level 5
+### What to submit
+Submit the contents of the non-README `.txt` file.
 
-There are a lot of subdirectories in this directory. All of them contain a txt file. However, one directory
-is named differently than the others. It has a txt file with the correct code. Figure out which one of the
-subdirectories has a name that is different. The contents of the txt file will be the answer code for this level.
+---
 
-*hint: Look carefully at the directory names. One doesn't match.*
+## Basic Level 4 — Find the different `.txt` file
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+### Goal
+The directory contains several `.txt` files. One filename is different from the others. The contents of that file are the code.
 
-## Level 6
+### Steps
 
-There are a lot of subdirectories in this directory. All of them contain a txt file. However, one directory
-has an "inhere.txt" file with the correct code. The other files are named differently. Try using the `find`
-command.
+```sh
+cd /home/basic4
+cat README.txt
+ls -l
+```
 
-* hint: `find` has a lot of flags/options. Consider which of these options will give you just the file you're looking for.
+Look for the filename that does not seem to belong with the others. Then display that file:
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+```sh
+cat different-file-name.txt
+```
 
-## Level 7
+A helpful way to inspect all text files is:
 
-Display the contents of the file called `inhere.txt` The contents of this file will be the answer code for this level.
+```sh
+for f in *.txt; do echo "--- $f ---"; cat "$f"; done
+```
 
-* hint: try using the `cat` command.*
+### What to submit
+Submit the contents of the different `.txt` file.
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+---
 
-## Level 8
+## Basic Level 5 — Find `inhere.txt` inside the differently named directory
 
-Display the contents of the file called `inhere.txt` The contents of this file will be the answer code for this level.
+### Goal
+There are several directories. One directory has a name that is different from the others. Inside that directory is a file named `inhere.txt`. The contents of that file are the code.
 
-* hint: try using the `cat` command.*
+### Steps
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+```sh
+cd /home/basic5
+cat README.txt
+ls -l
+```
 
-## Level 9
+Identify the directory whose name does not fit with the others, then inspect it:
 
-Display the contents of the file called `inhere.txt` The contents of this file will be the answer code for this level.
+```sh
+cd different-directory-name
+ls -l
+cat inhere.txt
+```
 
-* hint: try using the `cat` command.*
+### What to submit
+Submit the contents of `inhere.txt` from the differently named directory.
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+---
 
-## Level 10
+## Basic Level 6 — Use `find` to locate `inhere.txt`
 
-Display the contents of the file called `inhere.txt` The contents of this file will be the answer code for this level.
+### Goal
+The file `inhere.txt` is hidden somewhere inside one of the directories. The README indicates that there is no obvious way to know which directory contains it, so use `find`.
 
-* hint: try using the `cat` command.*
+### Steps
 
-When you are done getting this code, you can go to the next level with the command `nextlevel`
+```sh
+cd /home/basic6
+cat README.txt
+find . -name 'inhere.txt' -type f
+```
+
+After `find` prints the path, display the file:
+
+```sh
+cat ./path/to/inhere.txt
+```
+
+You can also combine the search and display in one command:
+
+```sh
+find . -name 'inhere.txt' -type f -exec cat {} \;
+```
+
+### What to submit
+Submit the contents of the discovered `inhere.txt` file.
+
+---
+
+## Basic Level 7 — Read the code from a directory name
+
+### Goal
+The code is part of a directory name. Look for the directory that contains a dash (`-`). The code is the characters after the dash.
+
+### Steps
+
+```sh
+cd /home/basic7
+cat README.txt
+ls -l
+```
+
+Example pattern:
+
+```text
+someword-ABCDEFGH
+```
+
+In that example, the code would be:
+
+```text
+ABCDEFGH
+```
+
+### What to submit
+Submit only the characters after the dash in the directory name.
+
+---
+
+## Basic Level 8 — Find the different directory name, then read the suffix
+
+### Goal
+Each directory name contains a dash and a suffix. The code is the suffix after the dash in the directory whose name is different from the other directory names.
+
+### Steps
+
+```sh
+cd /home/basic8
+cat README.txt
+ls -l
+```
+
+Look for the directory that does not fit the naming pattern of the others. The code is after the dash:
+
+```text
+specialword-ABCDEFGH
+```
+
+In that example, the code would be:
+
+```text
+ABCDEFGH
+```
+
+A clue from the setup is that the correct directory contains `inhere.txt`, so this may help:
+
+```sh
+find . -name 'inhere.txt' -type f
+```
+
+### What to submit
+Submit only the characters after the dash in the correct directory name.
+
+---
+
+## Basic Level 9 — Read the code from a different file name
+
+### Goal
+The code is part of a filename, not part of a directory name. Find the `.txt` filename that is different from the others. The code is the suffix in that filename.
+
+### Steps
+
+```sh
+cd /home/basic9
+cat README.txt
+ls -l
+```
+
+Look for the `.txt` file whose name is different from the rest. The pattern is similar to:
+
+```text
+someword-ABCDEFGH.txt
+```
+
+In that example, the code would be:
+
+```text
+ABCDEFGH
+```
+
+Do not use the suffix from a directory name.
+
+### What to submit
+Submit only the characters after the dash and before `.txt` in the correct filename.
+
+---
+
+## Basic Level 10 — The code is the filename
+
+### Goal
+The code is the filename of the `.txt` file in the directory. Ignore `README.txt`. Do not include the `.txt` extension.
+
+### Steps
+
+```sh
+cd /home/basic10
+cat README.txt
+ls -l
+```
+
+Find the `.txt` file that is not `README.txt`. For example, if the file is:
+
+```text
+ABCDEFGH.txt
+```
+
+Then the code is:
+
+```text
+ABCDEFGH
+```
+
+You may view the file to confirm:
+
+```sh
+cat ABCDEFGH.txt
+```
+
+### What to submit
+Submit the filename without `.txt`.
+
+---
+
+## Summary Table
+
+| Level | Main Skill | Key Command or Idea |
+|---|---|---|
+| Basic 1 | Read a file | `cat inhere.txt` |
+| Basic 2 | Show hidden files | `ls -la`, `cat .inhere.txt` |
+| Basic 3 | Identify a non-README file | `ls -l`, `cat file.txt` |
+| Basic 4 | Compare filenames/files | inspect `.txt` files |
+| Basic 5 | Navigate directories | `cd`, `cat inhere.txt` |
+| Basic 6 | Search recursively | `find . -name 'inhere.txt' -type f` |
+| Basic 7 | Extract text from a directory name | read text after `-` |
+| Basic 8 | Identify a different directory name | read suffix after `-` |
+| Basic 9 | Identify a different filename | read suffix before `.txt` |
+| Basic 10 | Use filename as code | filename without `.txt` |
 
 ## Complete the Challenge
 
