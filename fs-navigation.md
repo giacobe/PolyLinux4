@@ -424,27 +424,6 @@ Submit the filename without `.txt`.
 
 ---
 
-## Summary Table
-
-| Level | Main Skill | Key Command or Idea |
-|---|---|---|
-| Basic 1 | Read a file | `cat inhere.txt` |
-| Basic 2 | Show hidden files | `ls -la`, `cat .inhere.txt` |
-| Basic 3 | Identify a non-README file | `ls -l`, `cat file.txt` |
-| Basic 4 | Compare filenames/files | inspect `.txt` files |
-| Basic 5 | Navigate directories | `cd`, `cat inhere.txt` |
-| Basic 6 | Search recursively | `find . -name 'inhere.txt' -type f` |
-| Basic 7 | Extract text from a directory name | read text after `-` |
-| Basic 8 | Identify a different directory name | read suffix after `-` |
-| Basic 9 | Identify a different filename | read suffix before `.txt` |
-| Basic 10 | Use filename as code | filename without `.txt` |
-
-## Complete the Challenge
-
-Use what you learned to locate the requested file, inspect its contents, and submit the answer requested by the terminal instructions.
-
-Use the value you discovered in the VM, not the examples in this guide.
-
 ## Quick Reference
 
 - Where am I? `pwd`
