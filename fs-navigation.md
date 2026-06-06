@@ -56,14 +56,70 @@ sections:
     title: Quick Reference
     icon: ?
 ---
+## Welcome to PolyLinux!
 
-# PolyBandit3 Basic Levels 1–10 Instructions
+In this lab you will learn essential Linux command line skills. You will explore the file system, inspect files and directories, and practice using common Linux commands.
+
+Throughout the lab:
+
+- Read each step carefully
+- Use the terminal on the right to complete tasks
+- Refer to the Quick Reference if you need help
+
+**Let's get started!**
+
+## Get On the Machine
+
+Wait for the VM on the right to finish booting. Once the login prompt appears, log in.
+
+At the login prompt, type:
+
+`root`
+
+No password. Just hit **Enter**.
+
+## Explore the File System
+
+Start by seeing where you are and what's around you.
+
+Run these commands:
+
+`pwd`
+`ls`
+`ls -la`
+
+What do you notice about the directories and files?
+
+* Hint: Use `ls -la` to see hidden files and detailed information.*
+
+## Understand Directory Structure
+
+Linux organizes everything in a tree starting from the root directory `/`.
+
+Try these commands:
+
+`cd /`
+`ls`
+`cd /home`
+`ls -la`
+
+Notice how each directory can contain files and other directories.
+
+## Read File Contents
+
+Many Linux tasks involve inspecting text files. Practice viewing file contents without changing them.
+
+Useful commands:
+`cat README.txt`
+`head README.txt`
+`tail README.txt`
+* Hint: If a file is long, try `less filename` so you can scroll through it. *
+
+## PolyBandit3 Basic Levels 1–10 Instructions
 
 These instructions are based on the `basic1.sh` through `basic10.sh` setup scripts in the `giacobe/polybandit3` repository. Each level places a code somewhere in that level's directory. Your job is to inspect the files and directories, locate the code, and record it for that level.
 
 > Assumption: each level is available under `/home/basicN`, where `N` is the level number. For example, Basic Level 1 is in `/home/basic1`.
-
-## General Rules
 
 1. Start each level by changing into that level's directory.
 2. Read `README.txt` first.
