@@ -53,7 +53,7 @@ sections:
     title: Quick Reference
     icon: ✓
 ---
-## Welcome to PolyLinux!
+## PolyLinux File System Navigation Practice
 
 In this lab you will learn essential Linux command line skills. You will explore the file system, inspect files and directories, and practice using common Linux commands.
 
@@ -81,9 +81,9 @@ Start by seeing where you are and what's around you.
 
 Run these commands:
 
-`pwd`
-`ls`
-`ls -la`
+* `pwd`
+* `ls`
+* `ls -la`
 
 What do you notice about the directories and files?
 
@@ -95,10 +95,10 @@ Linux organizes everything in a tree starting from the root directory `/`.
 
 Try these commands:
 
-`cd /`
-`ls`
-`cd /home`
-`ls -la`
+* `cd /`
+* `ls`
+* `cd /home`
+* `ls -la`
 
 Notice how each directory can contain files and other directories.
 
@@ -126,16 +126,14 @@ These instructions are based on the `basic1.sh` through `basic10.sh` setup scrip
 
 Useful commands:
 
-`sh
-pwd
-ls
-ls -l
-ls -la
-cat README.txt
-cat filename.txt
-cd directoryname
-find . -name 'inhere.txt' -type f
-`
+* `pwd`
+* `ls`
+* `ls -l`
+* `ls -la`
+* `cat README.txt`
+* `cat filename.txt`
+* `cd directoryname`
+* `find . -name 'inhere.txt' -type f`
 
 ---
 
@@ -146,13 +144,9 @@ Display the contents of `inhere.txt`. The contents of that file are the code for
 
 ### Steps
 
-`sh
-cd /home/basic1
-cat README.txt
-ls
-cat inhere.txt
-`
-
+* `ls`
+* `cat inhere.txt`
+  
 ### What to submit
 Submit the text printed by `cat inhere.txt`.
 
@@ -165,12 +159,8 @@ Display the contents of `.inhere.txt`. The leading dot means the file is hidden 
 
 ### Steps
 
-`sh
-cd /home/basic2
-cat README.txt
-ls -la
-cat .inhere.txt
-`
+* `ls -la`
+* `cat .inhere.txt`
 
 ### What to submit
 Submit the text printed by `cat .inhere.txt`.
@@ -184,17 +174,11 @@ One file in the directory contains the code. The hint says it is not `README.txt
 
 ### Steps
 
-`sh
-cd /home/basic3
-cat README.txt
-ls -l
-`
+* `ls -l`
 
 Identify the extra `.txt` file that is not `README.txt`, then display it:
 
-`sh
-cat name-of-the-other-file.txt
-`
+* `cat name-of-the-other-file.txt`
 
 ### What to submit
 Submit the contents of the non-README `.txt` file.
@@ -208,23 +192,16 @@ The directory contains several `.txt` files. One filename is different from the 
 
 ### Steps
 
-`sh
-cd /home/basic4
-cat README.txt
-ls -l
-`
+* `ls -l`
 
 Look for the filename that does not seem to belong with the others. Then display that file:
 
-`sh
-cat different-file-name.txt
-`
+* `cat different-file-name.txt`
 
 A helpful way to inspect all text files is:
 
-`sh
-for f in *.txt; do echo "--- $f ---"; cat "$f"; done
-`
+* `for f in *.txt; do echo "--- $f ---"; cat "$f"; done`
+
 
 ### What to submit
 Submit the contents of the different `.txt` file.
@@ -238,19 +215,12 @@ There are several directories. One directory has a name that is different from t
 
 ### Steps
 
-`sh
-cd /home/basic5
-cat README.txt
-ls -l
-`
+* `ls -l`
 
 Identify the directory whose name does not fit with the others, then inspect it:
 
-`sh
-cd different-directory-name
-ls -l
-cat inhere.txt
-`
+* `ls l`
+* `cat inhere.txt`
 
 ### What to submit
 Submit the contents of `inhere.txt` from the differently named directory.
@@ -264,23 +234,15 @@ The file `inhere.txt` is hidden somewhere inside one of the directories. The REA
 
 ### Steps
 
-`sh
-cd /home/basic6
-cat README.txt
-find . -name 'inhere.txt' -type f
-`
+* `find . -name 'inhere.txt' -type f`
 
 After `find` prints the path, display the file:
 
-`sh
-cat ./path/to/inhere.txt
-`
+* `cat ./path/to/inhere.txt`
 
 You can also combine the search and display in one command:
 
-`sh
-find . -name 'inhere.txt' -type f -exec cat {} \;
-`
+* `find . -name 'inhere.txt' -type f -exec cat {} \;`
 
 ### What to submit
 Submit the contents of the discovered `inhere.txt` file.
@@ -294,23 +256,17 @@ The code is part of a directory name. Look for the directory that contains a das
 
 ### Steps
 
-`sh
-cd /home/basic7
-cat README.txt
-ls -l
-`
+* `ls -l`
 
 Example pattern:
 
-`text
-someword-ABCDEFGH
-`
+* `text`
+* `someword-ABCDEFGH`
 
 In that example, the code would be:
 
-`text
-ABCDEFGH
-`
+* `text`
+* `ABCDEFGH`
 
 ### What to submit
 Submit only the characters after the dash in the directory name.
@@ -324,29 +280,21 @@ Each directory name contains a dash and a suffix. The code is the suffix after t
 
 ### Steps
 
-`sh
-cd /home/basic8
-cat README.txt
-ls -l
-`
+* `ls -l`
 
 Look for the directory that does not fit the naming pattern of the others. The code is after the dash:
 
-`text
-specialword-ABCDEFGH
-`
+* `text`
+* `specialword-ABCDEFGH`
 
 In that example, the code would be:
 
-`text
-ABCDEFGH
-`
+* `text`
+* `ABCDEFGH`
 
 A clue from the setup is that the correct directory contains `inhere.txt`, so this may help:
 
-`sh
-find . -name 'inhere.txt' -type f
-`
+* `find . -name 'inhere.txt' -type f`
 
 ### What to submit
 Submit only the characters after the dash in the correct directory name.
@@ -360,23 +308,17 @@ The code is part of a filename, not part of a directory name. Find the `.txt` fi
 
 ### Steps
 
-`sh
-cd /home/basic9
-cat README.txt
-ls -l
-`
+* `ls -l`
 
 Look for the `.txt` file whose name is different from the rest. The pattern is similar to:
 
-`text
-someword-ABCDEFGH.txt
-`
+* `text`
+* `someword-ABCDEFGH.txt`
 
 In that example, the code would be:
 
-`text
-ABCDEFGH
-`
+* `text`
+* `ABCDEFGH`
 
 Do not use the suffix from a directory name.
 
@@ -392,29 +334,22 @@ The code is the filename of the `.txt` file in the directory. Ignore `README.txt
 
 ### Steps
 
-`sh
-cd /home/basic10
-cat README.txt
-ls -l
-`
+* `ls -l`
 
 Find the `.txt` file that is not `README.txt`. For example, if the file is:
 
-`text
-ABCDEFGH.txt
-`
+* `text`
+* `ABCDEFGH.txt`
 
 Then the code is:
 
-`text
-ABCDEFGH
-`
+* `text`
+* `ABCDEFGH`
 
 You may view the file to confirm:
 
-`sh
-cat ABCDEFGH.txt
-`
+* `sh`
+* `cat ABCDEFGH.txt`
 
 ### What to submit
 Submit the filename without `.txt`.
