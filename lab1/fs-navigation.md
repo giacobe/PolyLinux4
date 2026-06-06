@@ -49,12 +49,9 @@ sections:
   - label: 10
     title: Level Basic10
     icon: 📁
-  - label: FIN
-    title: Complete the Challenge
-    icon: ✓
   - label: REF
     title: Quick Reference
-    icon: ?
+    icon: ✓
 ---
 ## Welcome to PolyLinux!
 
@@ -68,7 +65,7 @@ Throughout the lab:
 
 **Let's get started!**
 
-## Get On the Machine
+### Get On the Machine
 
 Wait for the VM on the right to finish booting. Once the login prompt appears, log in.
 
@@ -129,7 +126,7 @@ These instructions are based on the `basic1.sh` through `basic10.sh` setup scrip
 
 Useful commands:
 
-```sh
+`sh
 pwd
 ls
 ls -l
@@ -138,7 +135,7 @@ cat README.txt
 cat filename.txt
 cd directoryname
 find . -name 'inhere.txt' -type f
-```
+`
 
 ---
 
@@ -149,12 +146,12 @@ Display the contents of `inhere.txt`. The contents of that file are the code for
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic1
 cat README.txt
 ls
 cat inhere.txt
-```
+`
 
 ### What to submit
 Submit the text printed by `cat inhere.txt`.
@@ -168,12 +165,12 @@ Display the contents of `.inhere.txt`. The leading dot means the file is hidden 
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic2
 cat README.txt
 ls -la
 cat .inhere.txt
-```
+`
 
 ### What to submit
 Submit the text printed by `cat .inhere.txt`.
@@ -187,17 +184,17 @@ One file in the directory contains the code. The hint says it is not `README.txt
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic3
 cat README.txt
 ls -l
-```
+`
 
 Identify the extra `.txt` file that is not `README.txt`, then display it:
 
-```sh
+`sh
 cat name-of-the-other-file.txt
-```
+`
 
 ### What to submit
 Submit the contents of the non-README `.txt` file.
@@ -211,23 +208,23 @@ The directory contains several `.txt` files. One filename is different from the 
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic4
 cat README.txt
 ls -l
-```
+`
 
 Look for the filename that does not seem to belong with the others. Then display that file:
 
-```sh
+`sh
 cat different-file-name.txt
-```
+`
 
 A helpful way to inspect all text files is:
 
-```sh
+`sh
 for f in *.txt; do echo "--- $f ---"; cat "$f"; done
-```
+`
 
 ### What to submit
 Submit the contents of the different `.txt` file.
@@ -241,19 +238,19 @@ There are several directories. One directory has a name that is different from t
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic5
 cat README.txt
 ls -l
-```
+`
 
 Identify the directory whose name does not fit with the others, then inspect it:
 
-```sh
+`sh
 cd different-directory-name
 ls -l
 cat inhere.txt
-```
+`
 
 ### What to submit
 Submit the contents of `inhere.txt` from the differently named directory.
@@ -267,23 +264,23 @@ The file `inhere.txt` is hidden somewhere inside one of the directories. The REA
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic6
 cat README.txt
 find . -name 'inhere.txt' -type f
-```
+`
 
 After `find` prints the path, display the file:
 
-```sh
+`sh
 cat ./path/to/inhere.txt
-```
+`
 
 You can also combine the search and display in one command:
 
-```sh
+`sh
 find . -name 'inhere.txt' -type f -exec cat {} \;
-```
+`
 
 ### What to submit
 Submit the contents of the discovered `inhere.txt` file.
@@ -297,23 +294,23 @@ The code is part of a directory name. Look for the directory that contains a das
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic7
 cat README.txt
 ls -l
-```
+`
 
 Example pattern:
 
-```text
+`text
 someword-ABCDEFGH
-```
+`
 
 In that example, the code would be:
 
-```text
+`text
 ABCDEFGH
-```
+`
 
 ### What to submit
 Submit only the characters after the dash in the directory name.
@@ -327,29 +324,29 @@ Each directory name contains a dash and a suffix. The code is the suffix after t
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic8
 cat README.txt
 ls -l
-```
+`
 
 Look for the directory that does not fit the naming pattern of the others. The code is after the dash:
 
-```text
+`text
 specialword-ABCDEFGH
-```
+`
 
 In that example, the code would be:
 
-```text
+`text
 ABCDEFGH
-```
+`
 
 A clue from the setup is that the correct directory contains `inhere.txt`, so this may help:
 
-```sh
+`sh
 find . -name 'inhere.txt' -type f
-```
+`
 
 ### What to submit
 Submit only the characters after the dash in the correct directory name.
@@ -363,23 +360,23 @@ The code is part of a filename, not part of a directory name. Find the `.txt` fi
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic9
 cat README.txt
 ls -l
-```
+`
 
 Look for the `.txt` file whose name is different from the rest. The pattern is similar to:
 
-```text
+`text
 someword-ABCDEFGH.txt
-```
+`
 
 In that example, the code would be:
 
-```text
+`text
 ABCDEFGH
-```
+`
 
 Do not use the suffix from a directory name.
 
@@ -395,29 +392,29 @@ The code is the filename of the `.txt` file in the directory. Ignore `README.txt
 
 ### Steps
 
-```sh
+`sh
 cd /home/basic10
 cat README.txt
 ls -l
-```
+`
 
 Find the `.txt` file that is not `README.txt`. For example, if the file is:
 
-```text
+`text
 ABCDEFGH.txt
-```
+`
 
 Then the code is:
 
-```text
+`text
 ABCDEFGH
-```
+`
 
 You may view the file to confirm:
 
-```sh
+`sh
 cat ABCDEFGH.txt
-```
+`
 
 ### What to submit
 Submit the filename without `.txt`.
