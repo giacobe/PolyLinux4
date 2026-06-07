@@ -43,38 +43,26 @@ window.addEventListener("load", function () {
     return;
   }
 
-  linuxCont.addEventListener("mousedown", () => {
-    if (linuxSerial && linuxSerial.focus) linuxSerial.focus();
-  });
-
   try {
     const cfg = getPolyLinuxLabConfig();
-    const dummyLinuxSerial = document.createElement("textarea");
 
-    Object.assign(dummyLinuxSerial.style, {
-      position: "absolute",
-      opacity: "0",
-      pointerEvents: "none",
-      zIndex: "-1",
-      width: "1px",
-      height: "1px",
-      top: "0",
-      left: "0"
-    });
-
-    document.body.appendChild(dummyLinuxSerial);
+    const terminalBridge = initXtermTerminal(linuxSerial, () => window.emulator);
 
     window.emulator = createVM({
       screen_container: null,
-      serial_container: dummyLinuxSerial,
+      serial_container: null,
       bzimage_url: cfg.bzimage,
       initrd_url: cfg.initrd,
       assetBase: cfg.assetBase || "./"
     });
 
-    enableSerialInput(linuxSerial, () => window.emulator);
-    startAnsiStripper(linuxSerial, () => window.emulator);
-    if (linuxSerial.focus) linuxSerial.focus();
+    attachV86SerialToXterm(window.emulator, terminalBridge);
+
+    linuxCont.addEventListener("mousedown", () => {
+      if (terminalBridge) terminalBridge.focus();
+    });
+
+    if (terminalBridge) terminalBridge.focus();
   } catch (e) {
     console.error("Linux VM error:", e);
     if (typeof updateStatus === "function") {

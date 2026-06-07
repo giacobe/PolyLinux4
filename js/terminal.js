@@ -1,34 +1,16 @@
 "use strict";
 
+/*
+  Terminal bridge reverted to the previous xterm.js-based display path.
+  The last full-repo package replaced xterm with a plain <div> renderer;
+  that caused carriage-return and line-discipline output from the Linux
+  serial console to run together. This file restores xterm as the terminal
+  emulator and only connects v86 serial I/O to xterm.
+*/
+
 (function () {
-  function stripAnsi(input) {
-    return String(input)
-      .replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "")
-      .replace(/\x1b\][^\x07]*(\x07|\x1b\\)/g, "")
-      .replace(/\x1b[()][A-Za-z0-9]/g, "")
-      .replace(/\x1b[@-Z\\-_]/g, "");
-  }
-
-  function appendTerminalText(el, text) {
-    if (!el || !text) return;
-
-    let cleaned = stripAnsi(text).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-
-    // Basic backspace handling.
-    while (cleaned.includes("\b")) {
-      cleaned = cleaned.replace(/[^\n]?\b/, "");
-    }
-
-    el.textContent += cleaned;
-
-    // Keep the DOM from growing without bound during long sessions.
-    const maxChars = 160000;
-    if (el.textContent.length > maxChars) {
-      el.textContent = el.textContent.slice(-maxChars);
-    }
-
-    el.scrollTop = el.scrollHeight;
-  }
+  let activeTerminal = null;
+  let activeFitAddon = null;
 
   function sendSerial(emulator, data) {
     if (!emulator || !data) return;
@@ -43,76 +25,97 @@
     }
   }
 
-  function keyToSerial(event) {
-    if (event.ctrlKey && event.key && event.key.length === 1) {
-      const code = event.key.toUpperCase().charCodeAt(0);
-      if (code >= 64 && code <= 95) return String.fromCharCode(code - 64);
+  function initXtermTerminal(container, getEmulator) {
+    if (!container) return null;
+
+    if (typeof Terminal === "undefined") {
+      container.textContent = "Terminal library did not load. Check the xterm.js script reference.";
+      console.error("xterm.js Terminal global is missing.");
+      return null;
     }
 
-    switch (event.key) {
-      case "Enter": return "\r";
-      case "Backspace": return "\x7f";
-      case "Tab": return "\t";
-      case "Escape": return "\x1b";
-      case "ArrowUp": return "\x1b[A";
-      case "ArrowDown": return "\x1b[B";
-      case "ArrowRight": return "\x1b[C";
-      case "ArrowLeft": return "\x1b[D";
-      default:
-        if (!event.altKey && !event.metaKey && event.key.length === 1) return event.key;
-        return "";
+    container.textContent = "";
+
+    const term = new Terminal({
+      cursorBlink: true,
+      convertEol: true,
+      fontFamily: '"Fira Code", Consolas, "Liberation Mono", monospace',
+      fontSize: 14,
+      scrollback: 5000,
+      theme: {
+        background: "#000000",
+        foreground: "#ffffff",
+        cursor: "#ffffff"
+      }
+    });
+
+    let fitAddon = null;
+    if (typeof FitAddon !== "undefined" && typeof FitAddon.FitAddon === "function") {
+      fitAddon = new FitAddon.FitAddon();
+      term.loadAddon(fitAddon);
     }
-  }
 
-  function enableSerialInput(displayElement, getEmulator) {
-    if (!displayElement) return;
+    term.open(container);
 
-    displayElement.setAttribute("role", "textbox");
-    displayElement.setAttribute("aria-label", "Linux serial terminal");
-    displayElement.setAttribute("aria-multiline", "true");
-    displayElement.tabIndex = 0;
+    function fit() {
+      try {
+        if (fitAddon) fitAddon.fit();
+      } catch (e) {
+        console.warn("Unable to fit xterm terminal:", e);
+      }
+    }
 
-    displayElement.addEventListener("keydown", (event) => {
-      const data = keyToSerial(event);
-      if (!data) return;
+    fit();
+    window.addEventListener("resize", fit);
 
-      event.preventDefault();
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(fit);
+      observer.observe(container);
+    }
+
+    term.onData((data) => {
       sendSerial(getEmulator(), data);
     });
 
-    displayElement.addEventListener("paste", (event) => {
-      const text = event.clipboardData ? event.clipboardData.getData("text") : "";
-      if (!text) return;
-      event.preventDefault();
-      sendSerial(getEmulator(), text.replace(/\n/g, "\r"));
-    });
-  }
+    activeTerminal = term;
+    activeFitAddon = fitAddon;
 
-  function startAnsiStripper(displayElement, getEmulator) {
-    if (!displayElement) return;
-
-    displayElement.textContent = "Booting PolyLinux...\n";
-
-    const emulator = getEmulator();
-    if (!emulator) return;
-
-    let attached = false;
-
-    function attach() {
-      if (attached) return;
-      attached = true;
-
-      if (typeof emulator.add_listener === "function") {
-        emulator.add_listener("serial0-output-char", (char) => appendTerminalText(displayElement, char));
-        emulator.add_listener("serial0-output-byte", (byte) => appendTerminalText(displayElement, String.fromCharCode(byte)));
+    return {
+      term,
+      fit,
+      focus() {
+        try { term.focus(); } catch (_) { /* no-op */ }
+      },
+      write(data) {
+        if (data) term.write(data);
       }
-
-      if (typeof updateStatus === "function") updateStatus("VM running");
-    }
-
-    attach();
+    };
   }
 
-  window.enableSerialInput = enableSerialInput;
-  window.startAnsiStripper = startAnsiStripper;
+  function attachV86SerialToXterm(emulator, bridge) {
+    if (!emulator || !bridge) return;
+
+    if (typeof updateStatus === "function") updateStatus("VM running");
+    bridge.write("Booting PolyLinux...\r\n");
+
+    if (typeof emulator.add_listener === "function") {
+      emulator.add_listener("serial0-output-byte", (byte) => {
+        bridge.write(String.fromCharCode(byte));
+      });
+
+      // Some v86 builds expose character output rather than byte output.
+      emulator.add_listener("serial0-output-char", (char) => {
+        if (typeof char === "string") bridge.write(char);
+      });
+    }
+  }
+
+  window.initXtermTerminal = initXtermTerminal;
+  window.attachV86SerialToXterm = attachV86SerialToXterm;
+  window.getPolyLinuxTerminal = function () {
+    return activeTerminal;
+  };
+  window.getPolyLinuxTerminalFitAddon = function () {
+    return activeFitAddon;
+  };
 })();
