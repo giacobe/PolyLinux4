@@ -1,281 +1,416 @@
-# File System Navigation
+---
+title: "PolyLinux File System Navigation"
+short_title: "FS-Navigation"
+panel_title: "Learning Path"
+form_url: "https://forms.office.com/Pages/ResponsePage.aspx?id=RY30fNs9iUOpwcEVUm61LpTnj6hRZqRDuq_1EWvYxyBURUk3UkU4UFNSQ1JBRk1SM0lJTjlORVpKQy4u"
+---
 
-form_url:
+## START: PolyLinux File System Navigation
 
-## START
+In this lab you will learn essential Linux command-line skills. You will explore the file system, inspect files and directories, and practice using common Linux commands.
 
-Welcome to the PolyLinux file-system navigation lab.
+Throughout the lab:
 
-Your goal is to explore the Linux file system, move between directories, inspect files, and discover the hidden codes placed throughout the system.
+- Read each step carefully.
+- Use the terminal on the right to complete tasks.
+- Refer to the Quick Reference if you need help.
 
-Begin by figuring out where you are in the file system.
+**Let's get started!**
 
-:::details Step-by-step help
-1. Click inside the Linux terminal.
-2. Type the command below and press Enter:
+## LOGIN: Get On the Machine
 
-   ```sh
-   pwd
-   ```
+Wait for the VM on the right to finish booting. Once the login prompt appears, log in.
 
-3. The output shows your current working directory.
-4. Next, list the files and directories in that location:
+At the login prompt, type:
 
-   ```sh
-   ls
-   ```
+```text
+root
+```
 
-5. Look for file or directory names that seem like they may lead to the next clue.
-:::
+No password is required. Just press **Enter**.
 
-## 1
-
-List the contents of the current directory and identify anything that looks useful or unusual.
-
-You should be looking for a file or folder that may contain the next instruction, hint, or code.
-
-:::details Step-by-step help
-1. Use `ls` to list the visible files:
-
-   ```sh
-   ls
-   ```
-
-2. Use `ls -l` to see more detail about each item:
-
-   ```sh
-   ls -l
-   ```
-
-3. If you see a directory, move into it with `cd`:
-
-   ```sh
-   cd directoryname
-   ```
-
-4. After moving, use `pwd` again to confirm your new location:
-
-   ```sh
-   pwd
-   ```
-:::
-
-## 2
-
-Hidden files are common in Linux. Find out whether this directory contains files that are not shown by the normal `ls` command.
-
-:::details Step-by-step help
-1. Use the `-a` option to show hidden files:
-
-   ```sh
-   ls -a
-   ```
-
-2. For a more detailed listing, combine options:
-
-   ```sh
-   ls -la
-   ```
-
-3. Files that begin with a period, such as `.hidden`, are hidden files.
-4. If you find a hidden file, inspect it with `cat`:
-
-   ```sh
-   cat .filename
-   ```
-:::
-
-## 3
-
-Read the contents of a text file that appears to contain a clue.
-
-:::details Step-by-step help
-1. Use `cat` followed by the filename:
-
-   ```sh
-   cat filename
-   ```
-
-2. If the filename contains spaces, put the filename in quotation marks:
-
-   ```sh
-   cat "file name with spaces"
-   ```
-
-3. If the output is too long, try reading it one screen at a time:
-
-   ```sh
-   less filename
-   ```
-
-4. Press `q` to exit `less`.
-:::
-
-## 4
-
-Move up one level in the directory tree and continue exploring from there.
-
-:::details Step-by-step help
-1. Use this command to move to the parent directory:
-
-   ```sh
-   cd ..
-   ```
-
-2. Confirm where you are:
-
-   ```sh
-   pwd
-   ```
-
-3. List the contents of the new location:
-
-   ```sh
-   ls -la
-   ```
-
-4. Continue moving through directories with `cd directoryname`.
-:::
-
-## 5
-
-Use an absolute path to move directly to a directory instead of moving one step at a time.
-
-:::details Step-by-step help
-1. An absolute path starts with `/`.
-2. Try moving to the root of the file system:
-
-   ```sh
-   cd /
-   ```
-
-3. List the top-level directories:
-
-   ```sh
-   ls
-   ```
-
-4. Move to another directory by giving the full path:
-
-   ```sh
-   cd /home
-   ```
-
-5. Use `pwd` to verify your location.
-:::
-
-## 6
-
-Search for files by name when you do not know exactly where they are located.
-
-:::details Step-by-step help
-1. Use `find` to search from your current location:
-
-   ```sh
-   find . -name "filename"
-   ```
-
-2. To search for files containing part of a name, use wildcards:
-
-   ```sh
-   find . -name "*clue*"
-   ```
-
-3. To search from the root directory, use `/` as the starting point:
-
-   ```sh
-   find / -name "*clue*" 2>/dev/null
-   ```
-
-4. The `2>/dev/null` part hides permission errors so the useful results are easier to see.
-:::
-
-## 7
-
-Search inside files for useful words or phrases.
-
-:::details Step-by-step help
-1. Use `grep` to search inside a file:
-
-   ```sh
-   grep "word" filename
-   ```
-
-2. Search all files in the current directory:
-
-   ```sh
-   grep "word" *
-   ```
-
-3. Search recursively through directories:
-
-   ```sh
-   grep -R "word" .
-   ```
-
-4. If you are looking for a code, try searching for words such as `code`, `secret`, `password`, or `clue`.
-:::
-
-## 8
-
-Use file permissions and file types to decide what to inspect next.
-
-:::details Step-by-step help
-1. Use a long listing:
-
-   ```sh
-   ls -l
-   ```
-
-2. The first character tells you the type:
-   - `d` means directory
-   - `-` means regular file
-   - `l` means symbolic link
-
-3. The remaining permission characters show who can read, write, or execute the item.
-4. If a file is readable, inspect it with `cat`, `less`, or `grep`.
-:::
-
-## 9
-
-Use command history and command editing to work more efficiently.
-
-:::details Step-by-step help
-1. Press the Up Arrow key to recall your previous command.
-2. Press Enter to run the recalled command again.
-3. Use the Left and Right Arrow keys to edit a command before running it.
-4. Use Tab completion to finish file and directory names:
-
-   ```sh
-   cd fir<Tab>
-   ```
-
-5. If there is only one matching name, the shell will complete it for you.
-:::
-
-## REF
-
-Reference commands for this lab:
+## REF: Quick Reference
 
 | Task | Command |
-|---|---|
-| Show current directory | `pwd` |
-| List files | `ls` |
-| List all files, including hidden files | `ls -a` |
-| Long detailed listing | `ls -l` |
-| Long listing with hidden files | `ls -la` |
-| Change directory | `cd directoryname` |
-| Move up one directory | `cd ..` |
-| Move to root directory | `cd /` |
-| Show file contents | `cat filename` |
-| Read file one page at a time | `less filename` |
-| Search for files | `find . -name "*text*"` |
-| Search inside files | `grep "text" filename` |
+| --- | --- |
+| Show where you are | `pwd` |
+| List files | `ls -la` |
+| Move down into a directory | `cd /path` |
+| Move back up one directory | `cd ..` |
+| Display a file | `cat filename` |
+| Show the first lines of a file | `head filename` |
+| Show the last lines of a file | `tail filename` |
+| Search for a file by name | `find . -name 'filename' -type f` |
+| --- | --- |
+| Change to the next level | `nextlevel` |
+| Change to the previous level | `prevlevel` |
 
-:::details Extra reference notes
-- A relative path starts from your current location.
-- An absolute path starts from `/`.
-- Hidden files begin with a period, such as `.secret`.
-- Use `pwd` often so you do not lose track of where you are.
-- Use `ls -la` when the normal `ls` output does not show what you need.
-:::
+
+## INST: Instructions: Explore the File System
+
+Start by seeing where you are and what is around you.
+
+Run these commands:
+
+```bash
+pwd
+ls
+ls -la
+```
+
+What do you notice about the directories and files?
+
+> **Hint:** Use `ls -la` to see hidden files and detailed information.
+
+## INST: Instructions: Understand Directory Structure
+
+Linux organizes everything in a tree starting from the root directory `/`.
+
+Try these commands:
+
+```bash
+cd /
+ls
+cd /home
+ls -la
+```
+
+Notice how each directory can contain files and other directories.
+
+## INST: Instructions: Display File Contents
+
+Many Linux tasks involve inspecting text files. Practice viewing file contents without changing them.
+
+Useful commands:
+
+```bash
+cat README.txt
+head README.txt
+tail README.txt
+```
+
+> **Hint:** If a file is long, try `less filename` so you can scroll through it.
+
+## 1: Level Basic1
+
+### Goal
+
+Display the contents of `inhere.txt`. The contents of that file are the code for this level.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls
+cat inhere.txt
+```
+
+### What to submit
+
+Submit the text printed by `cat inhere.txt`.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 2: Level Basic2
+
+### Goal
+
+Display the contents of `.inhere.txt`. The leading dot means the file is hidden from a normal `ls` listing.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -la
+cat .inhere.txt
+```
+
+### What to submit
+
+Submit the text printed by `cat .inhere.txt`.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 3: Level Basic3
+
+### Goal
+
+One file in the directory contains the code. The hint says it is not `README.txt`.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -l
+```
+
+Identify the extra `.txt` file that is not `README.txt`, then display it:
+
+```bash
+cat name-of-the-other-file.txt
+```
+
+Replace `name-of-the-other-file.txt` with the actual filename you find.
+
+### What to submit
+
+Submit the contents of the non-README `.txt` file.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 4: Level Basic4
+
+### Goal
+
+The directory contains several `.txt` files. One filename is different from the others. The contents of that file are the code.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -l
+```
+
+Look for the filename that does not seem to belong with the others. Then display that file:
+
+```bash
+cat different-file-name.txt
+```
+
+Replace `different-file-name.txt` with the actual filename you find.
+
+A helpful way to inspect all text files is:
+
+```bash
+for f in *.txt; do echo "--- $f ---"; cat "$f"; done
+```
+
+### What to submit
+
+Submit the contents of the different `.txt` file.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 5: Level Basic5
+
+### Goal
+
+There are several directories. One directory has a name that is different from the others. Inside that directory is a file named `inhere.txt`. The contents of that file are the code.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -l
+```
+
+Identify the directory whose name does not fit with the others, then inspect it:
+
+```bash
+cd different-directory-name
+ls -l
+cat inhere.txt
+```
+
+Replace `different-directory-name` with the actual directory name you find.
+
+### What to submit
+
+Submit the contents of `inhere.txt` from the differently named directory.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 6: Level Basic6
+
+### Goal
+
+The file `inhere.txt` is hidden somewhere inside one of the directories. The README indicates that there is no obvious way to know which directory contains it, so use `find`.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+find . -name 'inhere.txt' -type f
+```
+
+After `find` prints the path, display the file:
+
+```bash
+cat ./path/to/inhere.txt
+```
+
+Replace `./path/to/inhere.txt` with the actual path printed by `find`.
+
+You can also combine the search and display in one command:
+
+```bash
+find . -name 'inhere.txt' -type f -exec cat {} \;
+```
+
+### What to submit
+
+Submit the contents of the discovered `inhere.txt` file.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 7: Level Basic7
+
+### Goal
+
+The code is part of a directory name. Look for the directory that contains a dash (`-`). The code is the characters after the dash.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -l
+```
+
+Example pattern:
+
+```text
+someword-ABCDEFGH
+```
+
+In that example, the code would be:
+
+```text
+ABCDEFGH
+```
+
+### What to submit
+
+Submit only the characters after the dash in the directory name.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 8: Level Basic8
+
+### Goal
+
+Each directory name contains a dash and a suffix. The code is the suffix after the dash in the directory whose name is different from the other directory names.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -l
+```
+
+Look for the directory that does not fit the naming pattern of the others. The code is after the dash.
+
+Example pattern:
+
+```text
+specialword-ABCDEFGH
+```
+
+In that example, the code would be:
+
+```text
+ABCDEFGH
+```
+
+A clue from the setup is that the correct directory contains `inhere.txt`, so this may help:
+
+```bash
+find . -name 'inhere.txt' -type f
+```
+
+### What to submit
+
+Submit only the characters after the dash in the correct directory name.
+
+### Go on to the next level
+
+Enter te command `nextlevel`
+
+## 9: Level Basic9
+
+### Goal
+
+The code is part of a filename, not part of a directory name. Find the `.txt` filename that is different from the others. The code is the suffix in that filename.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -l
+```
+
+Look for the `.txt` file whose name is different from the rest. The pattern is similar to:
+
+```text
+someword-ABCDEFGH.txt
+```
+
+In that example, the code would be:
+
+```text
+ABCDEFGH
+```
+
+Do not use the suffix from a directory name.
+
+### What to submit
+
+Submit only the characters after the dash and before `.txt` in the correct filename.
+
+## 10: Level Basic10
+
+### Goal
+
+The code is the filename of the `.txt` file in the directory. Ignore `README.txt`. Do not include the `.txt` extension.
+
+### Steps
+
+Start in the level directory:
+
+```bash
+ls -l
+```
+
+Find the `.txt` file that is not `README.txt`. For example, if the file is:
+
+```text
+ABCDEFGH.txt
+```
+
+Then the code is:
+
+```text
+ABCDEFGH
+```
+
+You may view the file to confirm:
+
+```bash
+cat ABCDEFGH.txt
+```
+
+### What to submit
+
+Submit the filename without `.txt`.
