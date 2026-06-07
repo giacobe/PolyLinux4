@@ -6,27 +6,252 @@
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
+      .replace(/\"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  function sanitizeUrl(url) {
+    const value = String(url || "").trim();
+    if (/^(https?:|mailto:|#|\.\/|\.\.\/|\/)/i.test(value)) return escapeHtml(value);
+    return "#";
+  }
+
+  function inlineMarkdown(text) {
+    const codeSpans = [];
+    let out = String(text).replace(/`([^`]+)`/g, function (_match, code) {
+      const token = `@@CODE_${codeSpans.length}@@`;
+      codeSpans.push(`<code>${escapeHtml(code)}</code>`);
+      return token;
+    });
+
+    out = escapeHtml(out);
+    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_match, label, url) {
+      return `<a href="${sanitizeUrl(url)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    });
+    out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    out = out.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+    out = out.replace(/(^|[^*])\*([^*]+)\*/g, "$1<em>$2</em>");
+    out = out.replace(/(^|[^_])_([^_]+)_/g, "$1<em>$2</em>");
+
+    codeSpans.forEach((html, index) => {
+      out = out.replace(`@@CODE_${index}@@`, html);
+    });
+
+    return out;
   }
 
   function parseFrontMatter(markdown) {
     const match = markdown.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
     if (!match) return { meta: {}, body: markdown };
 
+    const raw = match[1];
     const meta = {};
-    for (const line of match[1].split(/\r?\n/)) {
-      const kv = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-      if (!kv) continue;
-      meta[kv[1]] = kv[2].trim().replace(/^['"]|['"]$/g, "");
+    const sections = [];
+    const lines = raw.split(/\r?\n/);
+    let inSections = false;
+    let current = null;
+
+    for (const line of lines) {
+      if (/^sections:\s*$/.test(line.trim())) {
+        inSections = true;
+        continue;
+      }
+
+      if (!inSections) {
+        const kv = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+        if (kv) meta[kv[1]] = kv[2].replace(/^[ '\"]|[ '\"]$/g, "").trim();
+        continue;
+      }
+
+      const item = line.match(/^\s*-\s+label:\s*(.*)$/);
+      if (item) {
+        current = { label: item[1].trim().replace(/^[ '\"]|[ '\"]$/g, "") };
+        sections.push(current);
+        continue;
+      }
+
+      const prop = line.match(/^\s+([A-Za-z0-9_-]+):\s*(.*)$/);
+      if (prop && current) {
+        current[prop[1]] = prop[2].trim().replace(/^[ '\"]|[ '\"]$/g, "");
+      }
     }
 
+    meta.sections = sections;
     return { meta, body: markdown.slice(match[0].length) };
   }
 
-  function getInstructionPath() {
-    const cfg = window.POLYLINUX_LAB_CONFIG || {};
-    return cfg.md || document.body.dataset.labMd || "./fs-navigation.md";
+  function parseSections(body) {
+    const lines = body.split(/\r?\n/);
+    const sections = [];
+    let current = null;
+
+    for (const line of lines) {
+      const heading = line.match(/^##\s+(.+)\s*$/);
+      if (heading) {
+        current = { title: heading[1].trim(), lines: [] };
+        sections.push(current);
+      } else if (current) {
+        current.lines.push(line);
+      }
+    }
+
+    return sections;
+  }
+
+  function renderMarkdownLines(lines) {
+    const html = [];
+    let listItems = [];
+    let orderedItems = [];
+    let paragraph = [];
+    let blockquote = [];
+    let inFence = false;
+    let fenceLines = [];
+
+    function flushParagraph() {
+      if (paragraph.length) {
+        html.push(`<p>${inlineMarkdown(paragraph.join(" "))}</p>`);
+        paragraph = [];
+      }
+    }
+
+    function flushList() {
+      if (listItems.length) {
+        html.push(`<ul>${listItems.map(item => `<li>${inlineMarkdown(item)}</li>`).join("")}</ul>`);
+        listItems = [];
+      }
+    }
+
+    function flushOrderedList() {
+      if (orderedItems.length) {
+        html.push(`<ol>${orderedItems.map(item => `<li>${inlineMarkdown(item)}</li>`).join("")}</ol>`);
+        orderedItems = [];
+      }
+    }
+
+    function flushBlockquote() {
+      if (blockquote.length) {
+        html.push(`<blockquote>${renderMarkdownLines(blockquote)}</blockquote>`);
+        blockquote = [];
+      }
+    }
+
+    function flushAll() {
+      flushParagraph();
+      flushList();
+      flushOrderedList();
+      flushBlockquote();
+    }
+
+    for (let i = 0; i < lines.length; i += 1) {
+      const rawLine = lines[i];
+      const trimmed = rawLine.trim();
+
+      if (inFence) {
+        if (/^```/.test(trimmed)) {
+          html.push(`<pre><code>${escapeHtml(fenceLines.join("\n"))}</code></pre>`);
+          fenceLines = [];
+          inFence = false;
+        } else {
+          fenceLines.push(rawLine);
+        }
+        continue;
+      }
+
+      if (/^```/.test(trimmed)) {
+        flushAll();
+        inFence = true;
+        fenceLines = [];
+        continue;
+      }
+
+      const detailsMatch = trimmed.match(/^:::details(?:\s+(.+))?\s*$/);
+      if (detailsMatch) {
+        flushAll();
+        const title = detailsMatch[1] || "Step-by-step help";
+        const detailsLines = [];
+        i += 1;
+        while (i < lines.length && !/^:::\s*$/.test(lines[i].trim())) {
+          detailsLines.push(lines[i]);
+          i += 1;
+        }
+        html.push(
+          `<details class="step-details">` +
+            `<summary><span class="step-details-summary-closed">Show ${escapeHtml(title)}</span><span class="step-details-summary-open">Hide ${escapeHtml(title)}</span></summary>` +
+            `<div class="step-details-body">${renderMarkdownLines(detailsLines)}</div>` +
+          `</details>`
+        );
+        continue;
+      }
+
+      if (!trimmed) {
+        flushAll();
+        continue;
+      }
+
+      const blockquoteMatch = trimmed.match(/^>\s?(.*)$/);
+      if (blockquoteMatch) {
+        flushParagraph();
+        flushList();
+        flushOrderedList();
+        blockquote.push(blockquoteMatch[1]);
+        continue;
+      }
+
+      const bullet = trimmed.match(/^-\s+(.+)$/);
+      if (bullet) {
+        flushParagraph();
+        flushOrderedList();
+        flushBlockquote();
+        listItems.push(bullet[1]);
+        continue;
+      }
+
+      const ordered = trimmed.match(/^\d+[.)]\s+(.+)$/);
+      if (ordered) {
+        flushParagraph();
+        flushList();
+        flushBlockquote();
+        orderedItems.push(ordered[1]);
+        continue;
+      }
+
+      flushList();
+      flushOrderedList();
+      flushBlockquote();
+      paragraph.push(trimmed);
+    }
+
+    if (inFence) {
+      html.push(`<pre><code>${escapeHtml(fenceLines.join("\n"))}</code></pre>`);
+    }
+
+    flushAll();
+    return html.join("\n");
+  }
+
+  function findSectionMeta(metaSections, section, index) {
+    if (Array.isArray(metaSections) && metaSections[index]) return metaSections[index];
+    return { label: String(index), title: section.title, icon: "" };
+  }
+
+  function displayMarkerLabel(label) {
+    return String(label || "").trim().slice(0, 5);
+  }
+
+  function markerLabelLength(label) {
+    return Math.min(Math.max(displayMarkerLabel(label).length, 1), 5);
+  }
+
+  function markerLengthClass(label) {
+    return `marker-len-${markerLabelLength(label)}`;
+  }
+
+  function markerClass(label, index, total) {
+    const normalized = String(label || "").toLowerCase();
+    const classes = ["timeline-marker", markerLengthClass(label)];
+    if (index === 0 || normalized === "start" || normalized === "intro") classes.push("start");
+    if (index === total - 1 || normalized === "ref") classes.push("ref");
+    return classes.join(" ");
   }
 
   function extractIframeSrc(value) {
@@ -36,15 +261,13 @@
   }
 
   function normalizeMicrosoftFormUrl(value) {
-    let url = extractIframeSrc(value).trim().replace(/^['"]|['"]$/g, "");
+    let url = extractIframeSrc(value).trim().replace(/^[ '\"]|[ '\"]$/g, "");
     if (!url || url === "about:blank" || url === "#") return "";
-
     if (/forms\.(office|cloud)\.com|forms\.cloud\.microsoft/i.test(url)) {
       if (!/[?&]embed=true/i.test(url)) {
         url += (url.includes("?") ? "&" : "?") + "embed=true";
       }
     }
-
     return url;
   }
 
@@ -54,7 +277,6 @@
     if (!frame) return;
 
     const url = normalizeMicrosoftFormUrl(rawUrl);
-
     if (url) {
       frame.src = url;
       frame.classList.add("has-form");
@@ -62,6 +284,7 @@
         placeholder.classList.remove("show");
         placeholder.setAttribute("aria-hidden", "true");
         placeholder.style.display = "none";
+        placeholder.style.pointerEvents = "none";
       }
     } else {
       frame.removeAttribute("src");
@@ -70,11 +293,17 @@
         placeholder.classList.add("show");
         placeholder.removeAttribute("aria-hidden");
         placeholder.style.display = "flex";
+        placeholder.style.pointerEvents = "none";
       }
     }
   }
 
-  function configurePage(meta) {
+  function renderInstructions(markdown) {
+    const { meta, body } = parseFrontMatter(markdown);
+    const sections = parseSections(body);
+    const guide = document.getElementById("guide-scroll");
+    if (!guide) return;
+
     if (meta.title) {
       const title = document.getElementById("lab-title");
       if (title) title.textContent = meta.title;
@@ -87,149 +316,50 @@
     }
 
     configureMicrosoftForm(meta.form_url || meta.form_embed_url || "");
-  }
-
-  function parseHeadingLabelAndTitle(text, index) {
-    const raw = String(text || "").trim();
-    const match = raw.match(/^([A-Za-z0-9]{1,5})\s*[:\-–—]\s*(.+)$/);
-
-    if (match) {
-      return {
-        label: match[1].toUpperCase(),
-        title: match[2].trim()
-      };
-    }
-
-    if (/^start$/i.test(raw)) return { label: "START", title: "Start" };
-    if (/^ref$/i.test(raw)) return { label: "REF", title: "Reference" };
-
-    return {
-      label: index === 0 ? "START" : String(index),
-      title: raw
-    };
-  }
-
-  function markerLengthClass(label) {
-    const len = Math.min(Math.max(String(label || "").trim().length, 1), 5);
-    return `marker-len-${len}`;
-  }
-
-  function rewriteHeading(heading, title) {
-    const newHeading = document.createElement("h3");
-    newHeading.innerHTML = title;
-    heading.replaceWith(newHeading);
-    return newHeading;
-  }
-
-  function makeTimelineRow(label, title, nodes, index, total) {
-    const row = document.createElement("section");
-    row.className = "timeline-row";
-    if (index === 0) row.classList.add("timeline-first-row");
-    if (index === total - 1 || /^ref$/i.test(label)) row.classList.add("timeline-last-row", "quickref-row");
-
-    const spine = document.createElement("div");
-    spine.className = "timeline-spine";
-
-    const marker = document.createElement("div");
-    marker.className = `timeline-marker ${markerLengthClass(label)}`;
-    if (/^start$/i.test(label)) marker.classList.add("start");
-    if (/^ref$/i.test(label)) marker.classList.add("ref");
-    marker.textContent = String(label).slice(0, 5).toUpperCase();
-
-    const card = document.createElement("article");
-    card.className = "lab-card";
-    if (index === 0) card.classList.add("intro-card");
-    if (!/^start$/i.test(label) && !/^ref$/i.test(label)) card.classList.add("step-block");
-
-    const eyebrow = document.createElement("div");
-    eyebrow.className = "eyebrow";
-    eyebrow.textContent = /^ref$/i.test(label) ? "Reference" : /^start$/i.test(label) ? "Start" : `Section ${label}`;
-    card.appendChild(eyebrow);
-
-    nodes.forEach((node, nodeIndex) => {
-      if (nodeIndex === 0 && /^H2$/i.test(node.tagName)) {
-        card.appendChild(rewriteHeading(node, escapeHtml(title)));
-      } else {
-        card.appendChild(node);
-      }
-    });
-
-    spine.appendChild(marker);
-    row.appendChild(spine);
-    row.appendChild(card);
-    return row;
-  }
-
-  function collectSections(rendered) {
-    const sections = [];
-    let current = null;
-
-    Array.from(rendered.childNodes).forEach((node) => {
-      if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "H2") {
-        current = { heading: node, nodes: [node] };
-        sections.push(current);
-      } else if (current) {
-        current.nodes.push(node);
-      } else if (node.textContent && node.textContent.trim()) {
-        current = { heading: null, nodes: [node], syntheticTitle: "Introduction" };
-        sections.push(current);
-      }
-    });
-
-    return sections;
-  }
-
-  function renderMarkdown(markdown) {
-    if (!window.marked || !window.DOMPurify) {
-      throw new Error("The Markdown libraries did not load. Check the marked.js and DOMPurify script tags.");
-    }
-
-    marked.setOptions({
-      gfm: true,
-      breaks: false,
-      headerIds: true,
-      mangle: false
-    });
-
-    const rawHtml = marked.parse(markdown);
-    const cleanHtml = DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } });
-
-    const rendered = document.createElement("div");
-    rendered.innerHTML = cleanHtml;
-    return rendered;
-  }
-
-  function renderInstructions(markdown) {
-    const { meta, body } = parseFrontMatter(markdown);
-    configurePage(meta);
-
-    const guide = document.getElementById("guide-scroll");
-    if (!guide) return;
-
-    const rendered = renderMarkdown(body);
-    const sections = collectSections(rendered);
 
     if (!sections.length) {
-      guide.innerHTML = `<p class="instructions-error">No sections found. Use <code>## START: Title</code>, <code>## 1: Title</code>, and <code>## REF: Title</code> headings in the Markdown file.</p>`;
+      guide.innerHTML = `<div class="instructions-loading">No sections found. Use ## headings in the Markdown file.</div>`;
       return;
     }
 
-    guide.innerHTML = "";
+    guide.innerHTML = sections.map((section, index) => {
+      const cfg = findSectionMeta(meta.sections, section, index);
+      const label = cfg.label || (index === 0 ? "START" : String(index));
+      const title = cfg.title || section.title;
+      const icon = cfg.icon || "";
+      const isIntro = index === 0;
+      const isRef = String(label).toLowerCase() === "ref" || index === sections.length - 1;
+      const rowClasses = ["timeline-row"];
+      if (isIntro) rowClasses.push("timeline-intro-row");
+      if (isRef) rowClasses.push("quickref-row");
+      const cardClasses = ["lab-card"];
+      if (isIntro) cardClasses.push("intro-card");
+      if (!isIntro && !isRef) cardClasses.push("step-block");
 
-    sections.forEach((section, index) => {
-      const headingText = section.heading ? section.heading.textContent : section.syntheticTitle;
-      const parsed = parseHeadingLabelAndTitle(headingText, index);
-      guide.appendChild(makeTimelineRow(parsed.label, parsed.title, section.nodes, index, sections.length));
-    });
+      return `
+        <section class="${rowClasses.join(" ")}">
+          <div class="timeline-spine">
+            <div class="${markerClass(label, index, sections.length)}">${escapeHtml(displayMarkerLabel(label))}</div>
+          </div>
+          <article class="${cardClasses.join(" ")}">
+            ${icon ? `<div class="lab-card-icon" aria-hidden="true">${escapeHtml(icon)}</div>` : ""}
+            ${isIntro ? `<h2>${inlineMarkdown(title)}</h2>` : `<div class="eyebrow">${escapeHtml(label === "REF" ? "Reference" : "Section " + label)}</div><h3>${inlineMarkdown(title)}</h3>`}
+            ${renderMarkdownLines(section.lines)}
+          </article>
+        </section>`;
+    }).join("\n");
+  }
+
+  function getInstructionPath() {
+    const cfg = window.POLYLINUX_LAB_CONFIG || {};
+    return cfg.md || document.body.dataset.labMd || "./fs-navigation.md";
   }
 
   async function loadInstructions() {
     const mdPath = getInstructionPath();
-
     try {
       const response = await fetch(mdPath, { cache: "no-store" });
       if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-
       const markdown = await response.text();
       renderInstructions(markdown);
     } catch (error) {
@@ -237,12 +367,10 @@
       const guide = document.getElementById("guide-scroll");
       if (guide) {
         guide.innerHTML = `
-          <div class="instructions-error">
-            <h3>Could not load instructions</h3>
-            <p>Check that <code>${escapeHtml(mdPath)}</code> exists and that the page is being served from a web server.</p>
-            <pre>${escapeHtml(error.message || error)}</pre>
-          </div>
-        `;
+          <div class="instructions-loading">
+            <strong>Could not load instructions.</strong><br>
+            Check that <code>${escapeHtml(mdPath)}</code> exists and that the page is being served from a local web server.
+          </div>`;
       }
     }
   }
@@ -263,7 +391,6 @@
     main.classList.remove("guide-collapsed");
     btn.setAttribute("aria-expanded", "true");
     btn.textContent = "Hide Instructions";
-
     btn.addEventListener("click", () => {
       const collapsed = main.classList.toggle("guide-collapsed");
       btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
@@ -280,7 +407,6 @@
     main.classList.add("form-open");
     btn.setAttribute("aria-expanded", "true");
     btn.textContent = "Close Codes Form";
-
     btn.addEventListener("click", () => {
       const open = main.classList.toggle("form-open");
       btn.setAttribute("aria-expanded", open ? "true" : "false");
@@ -296,15 +422,18 @@
     guide.addEventListener("wheel", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+      if (typeof event.stopImmediatePropagation === "function") {
+        event.stopImmediatePropagation();
+      }
 
       const lineHeight = 32;
       const pageHeight = Math.max(guide.clientHeight - 48, 120);
       let delta = event.deltaY;
-
-      if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) delta *= lineHeight;
-      if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) delta *= pageHeight;
-
+      if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) {
+        delta *= lineHeight;
+      } else if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+        delta *= pageHeight;
+      }
       guide.scrollTop += delta;
     }, { passive: false, capture: true });
   }
