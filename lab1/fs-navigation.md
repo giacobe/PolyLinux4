@@ -112,7 +112,7 @@ Submit the text printed by `cat inhere.txt`.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 2: Level Basic2
 
@@ -135,7 +135,7 @@ Submit the text printed by `cat .inhere.txt`.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 3: Level Basic3
 
@@ -165,7 +165,7 @@ Submit the contents of the non-README `.txt` file.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 4: Level Basic4
 
@@ -201,7 +201,7 @@ Submit the contents of the different `.txt` file.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 5: Level Basic5
 
@@ -233,7 +233,7 @@ Submit the contents of `inhere.txt` from the differently named directory.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 6: Level Basic6
 
@@ -269,7 +269,7 @@ Submit the contents of the discovered `inhere.txt` file.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 7: Level Basic7
 
@@ -303,7 +303,7 @@ Submit only the characters after the dash in the directory name.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 8: Level Basic8
 
@@ -345,7 +345,7 @@ Submit only the characters after the dash in the correct directory name.
 
 ### Go on to the next level
 
-Enter te command `nextlevel`
+Enter the command `nextlevel`
 
 ## 9: Level Basic9
 
@@ -378,6 +378,10 @@ Do not use the suffix from a directory name.
 ### What to submit
 
 Submit only the characters after the dash and before `.txt` in the correct filename.
+
+### Go on to the next level
+
+Enter the command `nextlevel`
 
 ## 10: Level Basic10
 
