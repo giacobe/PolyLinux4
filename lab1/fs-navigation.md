@@ -189,12 +189,6 @@ cat different-file-name.txt
 
 Replace `different-file-name.txt` with the actual filename you find.
 
-A helpful way to inspect all text files is:
-
-```bash
-for f in *.txt; do echo "--- $f ---"; cat "$f"; done
-```
-
 ### What to submit
 
 Submit the contents of the different `.txt` file.
