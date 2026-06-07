@@ -5,7 +5,7 @@ panel_title: "Learning Path"
 form_url: "https://forms.office.com/Pages/ResponsePage.aspx?id=RY30fNs9iUOpwcEVUm61LpTnj6hRZqRDuq_1EWvYxyBURUk3UkU4UFNSQ1JBRk1SM0lJTjlORVpKQy4u"
 ---
 
-## START: Welcome to PolyLinux!
+## START: PolyLinux File System Navigation
 
 In this lab you will learn essential Linux command-line skills. You will explore the file system, inspect files and directories, and practice using common Linux commands.
 
@@ -28,6 +28,23 @@ root
 ```
 
 No password is required. Just press **Enter**.
+
+## REF: Quick Reference
+
+| Task | Command |
+| --- | --- |
+| Show where you are | `pwd` |
+| List files | `ls -la` |
+| Move down into a directory | `cd /path` |
+| Move back up one directory | `cd ..` |
+| Display a file | `cat filename` |
+| Show the first lines of a file | `head filename` |
+| Show the last lines of a file | `tail filename` |
+| Search for a file by name | `find . -name 'filename' -type f` |
+| --- | --- |
+| Change to the next level | `nextlevel` |
+| Change to the previous level | `prevlevel` |
+
 
 ## INST: Instructions: Explore the File System
 
@@ -85,7 +102,6 @@ Display the contents of `inhere.txt`. The contents of that file are the code for
 Start in the level directory:
 
 ```bash
-cd /home/basic1
 ls
 cat inhere.txt
 ```
@@ -105,7 +121,6 @@ Display the contents of `.inhere.txt`. The leading dot means the file is hidden 
 Start in the level directory:
 
 ```bash
-cd /home/basic2
 ls -la
 cat .inhere.txt
 ```
@@ -125,7 +140,6 @@ One file in the directory contains the code. The hint says it is not `README.txt
 Start in the level directory:
 
 ```bash
-cd /home/basic3
 ls -l
 ```
 
@@ -152,7 +166,6 @@ The directory contains several `.txt` files. One filename is different from the 
 Start in the level directory:
 
 ```bash
-cd /home/basic4
 ls -l
 ```
 
@@ -185,7 +198,6 @@ There are several directories. One directory has a name that is different from t
 Start in the level directory:
 
 ```bash
-cd /home/basic5
 ls -l
 ```
 
@@ -214,7 +226,6 @@ The file `inhere.txt` is hidden somewhere inside one of the directories. The REA
 Start in the level directory:
 
 ```bash
-cd /home/basic6
 find . -name 'inhere.txt' -type f
 ```
 
@@ -247,7 +258,6 @@ The code is part of a directory name. Look for the directory that contains a das
 Start in the level directory:
 
 ```bash
-cd /home/basic7
 ls -l
 ```
 
@@ -278,7 +288,6 @@ Each directory name contains a dash and a suffix. The code is the suffix after t
 Start in the level directory:
 
 ```bash
-cd /home/basic8
 ls -l
 ```
 
@@ -317,7 +326,6 @@ The code is part of a filename, not part of a directory name. Find the `.txt` fi
 Start in the level directory:
 
 ```bash
-cd /home/basic9
 ls -l
 ```
 
@@ -350,7 +358,6 @@ The code is the filename of the `.txt` file in the directory. Ignore `README.txt
 Start in the level directory:
 
 ```bash
-cd /home/basic10
 ls -l
 ```
 
@@ -375,16 +382,3 @@ cat ABCDEFGH.txt
 ### What to submit
 
 Submit the filename without `.txt`.
-
-## REF: Quick Reference
-
-| Task | Command |
-| --- | --- |
-| Show where you are | `pwd` |
-| List files | `ls -la` |
-| Move down into a directory | `cd /path` |
-| Move back up one directory | `cd ..` |
-| Display a file | `cat filename` |
-| Show the first lines of a file | `head filename` |
-| Show the last lines of a file | `tail filename` |
-| Search for a file by name | `find . -name 'filename' -type f` |
